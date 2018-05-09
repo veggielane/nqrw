@@ -7,6 +7,10 @@ namespace NQRW.Messaging
         DateTime Timestamp { get; }
 
     }
-
+    public interface IMessage<T>
+    {
+        DateTime Timestamp { get; }
+        Func<T> Callback { get; }
+    }
 
 }

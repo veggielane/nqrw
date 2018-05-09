@@ -32,7 +32,7 @@ namespace NQRW.Maths
             return new Angle(degrees * Math.PI / 180.0);
         }
 
-        public static Angle FroGradians(double gradians)
+        public static Angle FromGradians(double gradians)
         {
             return new Angle(gradians * Math.PI / 50);
         }

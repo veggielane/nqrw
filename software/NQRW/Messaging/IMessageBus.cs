@@ -7,6 +7,7 @@ namespace NQRW.Messaging
         IObservable<IMessage> Messages { get; }
         void Add(IMessage message);
         void Debug(string message);
+        void Handle(object o);
     }
 
 

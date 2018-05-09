@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NQRW.Messaging
+namespace NQRW.Messaging.Messages
 {
     public class SystemMessage : BaseMessage
     {

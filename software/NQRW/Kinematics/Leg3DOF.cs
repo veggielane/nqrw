@@ -31,7 +31,7 @@ namespace NQRW.Kinematics
         //public readonly Servo FemurServo = new Servo();
         // public readonly Servo TibiaServo = new Servo();
 
-        public void Inverse(IBody body)
+        public void Update(IBody body)
         {
             /*
             * Todo: 

@@ -4,6 +4,7 @@ using NQRW.Gait;
 using NQRW.Kinematics;
 using NQRW.Maths;
 using NQRW.Messaging;
+using NQRW.Messaging.Messages;
 using NQRW.Robotics;
 using NQRW.Timing;
 using System;
@@ -11,9 +12,24 @@ using System.Reactive.Linq;
 
 namespace NQRW
 {
-    public class Robot : IRobot
+    public class Robot : IRobot, IHandle<BodyMoveMessage>, IHandle<ButtonEvent>, IHandle<AxisEvent>
     {
-        public string Name => "KegBot";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public string Name => "Stompy";
 
         public IMessageBus Bus { get; private set; }
         public ITimer Timer { get; private set; }
@@ -33,16 +49,23 @@ namespace NQRW
         public IGaitEngine Gait { get; private set; }
 
         public IServoController ServoController { get; private set; }
+        public IController Controller { get; private set; }
 
-        public Robot(IMessageBus bus, ITimer timer, IStateMachine stateMachine, IServoController servoController)
+        public Robot( IMessageBus bus, ITimer timer, 
+            IStateMachine stateMachine, IServoController servoController, IController controller,
+            IdleState idleState, MovingState movingState)
         {
             Bus = bus;
             Timer = timer;
             StateMachine = stateMachine;
             ServoController = servoController;
-            StateMachine.AddState(new IdleState(Bus));
-            StateMachine.AddState(new MovingState(Bus));
+            Controller = controller;
+
+            StateMachine.AddState(idleState);
+            StateMachine.AddState(movingState);
+
             StateMachine.AddTransition<IdleState, StartCommand, MovingState>();
+            StateMachine.AddTransition<MovingState, StartCommand, IdleState>();
 
             Gait = new GaitEngine();
 
@@ -70,8 +93,8 @@ namespace NQRW
                 return;
             }
             Timer.Ticks.SubSample(10).Subscribe(t => {
-                Bus.Add(new SystemMessage("Timer Tick"));
-                ServoController.Stop();
+                //Bus.Add(new SystemMessage("Timer Tick"));
+                //ServoController.Stop();
             });
 
             // Timer.Ticks.SubSample(10).Subscribe(t => Gait.Run(Vector2.UnitX));
@@ -83,7 +106,33 @@ namespace NQRW
 
         public void Dispose()
         {
+            Controller.Dispose();
+        }
 
+        public void Handle(BodyMoveMessage message)
+        {
+            //Body.Position = message.Transform;
+        }
+
+        public void Handle(ButtonEvent message)
+        {
+            if(message.Is(PS4Button.PS, ButtonState.Released))
+            {
+                StateMachine.Next<StartCommand>();
+            }
+            
+        }
+
+        public void Handle(AxisEvent message)
+        {
+            if(message.Axis == PS4Axis.LeftStickX)
+            {
+                Body.X = MathsHelper.Map(message.Value, -32767, 32767, -10, 10);
+            }
+            if (message.Axis == PS4Axis.LeftStickY)
+            {
+                Body.Y = MathsHelper.Map(message.Value, -32767, 32767, -10, 10);
+            }
         }
     }
 }

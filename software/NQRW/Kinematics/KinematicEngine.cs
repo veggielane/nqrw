@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using NQRW.Maths;
+using System.Collections.Generic;
 
 namespace NQRW.Kinematics
 {
     public class KinematicEngine : IKinematicEngine
     {
-        public IBody Body { get; private set; }
+
+
+
         public IList<ILeg> Legs { get; private set; }
 
         public KinematicEngine(IBody body)
@@ -20,11 +23,11 @@ namespace NQRW.Kinematics
         }
 
 
-        public void Inverse()
+        public void Update()
         {
             foreach (var leg in Legs)
             {
-                leg.Inverse(Body);
+                leg.Update(Body);
             }
         }
     }
