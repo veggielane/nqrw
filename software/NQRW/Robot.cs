@@ -15,15 +15,7 @@ namespace NQRW
     public class Robot : IRobot, IHandle<BodyMoveMessage>, IHandle<ButtonEvent>, IHandle<AxisEvent>
     {
 
-
-
-
-
-
-
-
-
-
+        
 
 
 
@@ -34,7 +26,6 @@ namespace NQRW
         public IMessageBus Bus { get; private set; }
         public ITimer Timer { get; private set; }
         public IStateMachine StateMachine { get; private set; }
-        public IBody Body { get; private set; }
 
 
         public Leg3DOF LeftFront { get; private set; }
@@ -51,8 +42,10 @@ namespace NQRW
         public IServoController ServoController { get; private set; }
         public IController Controller { get; private set; }
 
+        public IKinematicEngine KinematicEngine { get; private set; }
+
         public Robot( IMessageBus bus, ITimer timer, 
-            IStateMachine stateMachine, IServoController servoController, IController controller,
+            IStateMachine stateMachine, IServoController servoController, IController controller, IKinematicEngine kinematicEngine,
             IdleState idleState, MovingState movingState)
         {
             Bus = bus;
@@ -68,16 +61,13 @@ namespace NQRW
             StateMachine.AddTransition<MovingState, StartCommand, IdleState>();
 
             Gait = new GaitEngine();
-
-            Body = new Body();
-            LeftFront = new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) };
-            LeftMiddle = new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) };
-            LeftRear = new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) };
-            RightFront = new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) };
-            RightMiddle = new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) };
-            RightRear = new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) };
-
-            Kinematic = new KinematicEngine(Body, LeftFront, LeftMiddle, LeftRear, RightFront, RightMiddle, RightRear);
+            KinematicEngine = kinematicEngine;
+            KinematicEngine.Legs.Add(Leg.LeftFront, new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) });
+            KinematicEngine.Legs.Add(Leg.LeftMiddle, new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) });
+            KinematicEngine.Legs.Add(Leg.LeftRear, new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) });
+            KinematicEngine.Legs.Add(Leg.RightFront, new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) });
+            KinematicEngine.Legs.Add(Leg.RightMiddle, new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) });
+            KinematicEngine.Legs.Add(Leg.RightRear, new Leg3DOF(Matrix4.Identity) { FootPosition = new Vector3(10, 10, 10) });
         }
         public void Boot()
         {
@@ -92,9 +82,8 @@ namespace NQRW
                 Bus.Debug($"{ServoController.Name} Not Connected");
                 return;
             }
-            Timer.Ticks.SubSample(10).Subscribe(t => {
-                //Bus.Add(new SystemMessage("Timer Tick"));
-                //ServoController.Stop();
+            Timer.Ticks.Subscribe(t => {
+                KinematicEngine.Update();
             });
 
             // Timer.Ticks.SubSample(10).Subscribe(t => Gait.Run(Vector2.UnitX));
@@ -127,11 +116,11 @@ namespace NQRW
         {
             if(message.Axis == PS4Axis.LeftStickX)
             {
-                Body.X = MathsHelper.Map(message.Value, -32767, 32767, -10, 10);
+                KinematicEngine.BodyX = MathsHelper.Map(message.Value, -32767, 32767, -10, 10);
             }
             if (message.Axis == PS4Axis.LeftStickY)
             {
-                Body.Y = MathsHelper.Map(message.Value, -32767, 32767, -10, 10);
+                KinematicEngine.BodyY = MathsHelper.Map(message.Value, -32767, 32767, -10, 10);
             }
         }
     }

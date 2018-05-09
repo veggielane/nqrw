@@ -12,8 +12,6 @@ namespace NQRW.Robotics
 {
     public interface IRobot : IDisposable
     {
-
-
         String Name { get; }
         IMessageBus Bus { get; }
         ITimer Timer { get; }
@@ -22,8 +20,6 @@ namespace NQRW.Robotics
         IGaitEngine Gait { get; }
 
         void Boot();
-
-        IBody Body { get; }
     }
 
 }

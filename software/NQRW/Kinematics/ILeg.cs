@@ -7,6 +7,6 @@ namespace NQRW.Kinematics
         Matrix4 BasePosition { get; }
         Vector3 FootPosition { get; set; }
         Vector3 FootOffset { get; set; }
-        void Update(IBody body);
+        void Update(Matrix4 bodyPosition);
     }
 }

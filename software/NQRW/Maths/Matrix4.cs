@@ -341,10 +341,6 @@ namespace NQRW.Maths
                    + "|" + this[4, 1] + "," + this[4, 2] + "," + this[4, 3] + "," + this[4, 4] + "|";
         }
 
-        public Vector3 ToVect3()
-        {
-            return new Vector3(X, Y, Z);
-        }
 
         public static Matrix4 operator +(Matrix4 m1, Matrix4 m2)
         {

@@ -6,6 +6,7 @@ namespace NQRW.FiniteStateMachine
     {
         public MovingState(IMessageBus bus) : base("Moving", bus)
         {
+
         }
     }
 }

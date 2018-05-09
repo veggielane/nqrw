@@ -2,6 +2,7 @@
 using Autofac.Core;
 using NQRW.Devices;
 using NQRW.FiniteStateMachine;
+using NQRW.Kinematics;
 using NQRW.Messaging;
 using NQRW.Robotics;
 using NQRW.Timing;
@@ -34,6 +35,9 @@ namespace NQRW
             builder.RegisterType<MovingState>().AsSelf().SingleInstance();
             builder.RegisterType<IdleState>().AsSelf().SingleInstance();
 
+            builder.RegisterType<KinematicEngine>().As<IKinematicEngine>().SingleInstance();
+
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Console.WriteLine($"Detecting OS: Windows");
@@ -46,7 +50,6 @@ namespace NQRW
                 builder.RegisterType<LinuxSSC32>().As<IServoController>().SingleInstance();
                 builder.RegisterType<LinuxController>().As<IController>().SingleInstance();
             }
-
         }
 
         public static T Build<T>()

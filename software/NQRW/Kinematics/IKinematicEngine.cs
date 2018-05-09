@@ -1,20 +1,23 @@
 ﻿using NQRW.Maths;
+using NQRW.Robotics;
 using System.Collections.Generic;
 
 namespace NQRW.Kinematics
 {
     public interface IKinematicEngine
     {
-        Angle Roll { get; }
-        Angle Pitch { get; }
-        Angle Yaw { get; }
+        Angle BodyRoll { get; }
+        Angle BodyPitch { get; }
+        Angle BodyYaw { get; }
 
-        double X { get; set; }
-        double Y { get; set; }
-        double Z { get; set; }
+        double BodyX { get; set; }
+        double BodyY { get; set; }
+        double BodyZ { get; set; }
 
-        Matrix4 Position { get; }
-        IList<ILeg> Legs { get; }
+        Matrix4 BodyPosition { get; }
+
+        Dictionary<Leg, ILeg> Legs { get; set; }
+
         void Update();
     }
 }

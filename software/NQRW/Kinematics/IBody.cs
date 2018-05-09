@@ -2,8 +2,8 @@
 
 namespace NQRW.Kinematics
 {
-    public interface IBody
-    {
+    //public interface IBody
+    //{
 
-    }
+    //}
 }
