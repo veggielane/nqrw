@@ -30,9 +30,17 @@ namespace NQRW.Kinematics
             var baseToFoot = (FootPosition + FootOffset) - basePos.ToVector3();
 
             var distance = baseToFoot.Length;
-            var relative = (basePos.RotationComponent.Inverse()) * baseToFoot.ToMatrix4();
-            var mainAngle = Angle.FromDegrees(180.0) - Trig.Atan2(relative.Y, relative.X);
-            var y = relative.ToVector3();
+            var relative = basePos.RotationComponent.Inverse() * baseToFoot.ToMatrix4();
+
+
+
+
+            var angle1 = Angle.FromDegrees(180.0) - Trig.Atan2(relative.Y, relative.X);
+
+
+
+
+            var lengthWithOffset = 0;
 
             //var relative = (basePos.RotationComponent * (baseToFoot.ToMatrix4()));
 
