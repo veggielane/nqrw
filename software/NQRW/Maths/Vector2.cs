@@ -210,7 +210,10 @@ namespace NQRW.Maths
         {
             return (1 - t) * this + t * end;
         }
-
+        public double DotProduct(Vector2 v)
+        {
+            return X * v.X + Y * v.Y;
+        }
         public override string ToString()
         {
             return String.Format("Vect3<{0},{1}>", X, Y);

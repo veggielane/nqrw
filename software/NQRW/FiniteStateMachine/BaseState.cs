@@ -13,12 +13,12 @@ namespace NQRW.FiniteStateMachine
             Bus = bus;
         }
 
-        public void Start()
+        public virtual void Start()
         {
             Bus.Debug("Starting State: " + Name);
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
             Bus.Debug("Stopping State: " + Name);
         }

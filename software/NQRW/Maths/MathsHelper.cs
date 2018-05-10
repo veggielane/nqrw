@@ -4,7 +4,10 @@ namespace NQRW.Maths
 {
     public static class MathsHelper
     {
-
+        public static Vector2 ToVector2(this Vector3 v)
+        {
+            return new Vector2(v.X, v.Y);
+        }
         public static Vector3 ToVector3(this Matrix4 m)
         {
             return new Vector3(m.X, m.Y, m.Z);

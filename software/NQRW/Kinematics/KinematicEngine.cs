@@ -7,7 +7,7 @@ namespace NQRW.Kinematics
 {
     public class KinematicEngine : IKinematicEngine
     {
-        public Matrix4 BodyPosition => Matrix4.Translate(BodyX, BodyY, BodyZ) * Matrix4.RotateX(BodyRoll) * Matrix4.RotateY(BodyPitch) * Matrix4.RotateZ(BodyYaw);
+        public Matrix4 BodyPosition => Matrix4.Translate(BodyX, BodyY, BodyZ) * Matrix4.RotateZ(BodyYaw) * Matrix4.RotateY(BodyPitch) * Matrix4.RotateX(BodyRoll);
 
         public Angle BodyRoll { get; set; } = Angle.FromDegrees(0);
 
@@ -19,7 +19,7 @@ namespace NQRW.Kinematics
 
         public double BodyY { get; set; } = 0;
 
-        public double BodyZ { get; set; } = 20;
+        public double BodyZ { get; set; } = 0;
 
         public Dictionary<Leg, ILeg> Legs { get; set; }
 
@@ -37,12 +37,17 @@ namespace NQRW.Kinematics
         public void Update()
         {
             var body = BodyPosition;
-            Console.WriteLine(body.ToVector3());
-
-
-            foreach (var leg in Legs)
+            foreach (var leg in Legs.Values)
             {
-                //leg.Update(body);
+                leg.Update(body);
+            }
+        }
+
+        public void SetOffsets(Dictionary<Leg, Vector3> offsets)
+        {
+            foreach(var kvp in offsets)
+            {
+                Legs[kvp.Key].FootOffset = kvp.Value;
             }
         }
     }

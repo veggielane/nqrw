@@ -2,6 +2,7 @@
 using Autofac.Core;
 using NQRW.Devices;
 using NQRW.FiniteStateMachine;
+using NQRW.Gait;
 using NQRW.Kinematics;
 using NQRW.Messaging;
 using NQRW.Robotics;
@@ -36,7 +37,7 @@ namespace NQRW
             builder.RegisterType<IdleState>().AsSelf().SingleInstance();
 
             builder.RegisterType<KinematicEngine>().As<IKinematicEngine>().SingleInstance();
-
+            builder.RegisterType<GaitEngine>().As<IGaitEngine>().SingleInstance();
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {

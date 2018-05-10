@@ -17,7 +17,10 @@ namespace NQRW.Gait
 
         public double Lerp { get; private set; }
 
-        public Vector2 Heading { get; private set; }
+
+        public double HeadingX { get; set; } = 0;
+        public double HeadingY { get; set; } = 0;
+        public Vector2 Heading => new Vector2(HeadingX, HeadingY);
 
 
 
@@ -42,16 +45,15 @@ namespace NQRW.Gait
 
         public Dictionary<Leg, int[]> Steps { get; private set; }
 
+        public bool Moving { get; set; } = false;
 
         public GaitEngine()
         {
             StrideHeight = 20.0;
             StrideLength = 20.0;
 
-            Heading = new Vector2(0, 10);
-
             StepCount = 8;
-            MicroSteps = 10;
+            MicroSteps = 20;
             CurrentStep = 0;
             Lerp = 0;
 
@@ -82,26 +84,22 @@ namespace NQRW.Gait
             CurrentStep++;
             if (CurrentStep >= StepCount) CurrentStep = 0;
         }
-        public Dictionary<Leg, Vector3> Run(Vector2 heading)
+        public Dictionary<Leg, Vector3> Update()
         {
-            Heading = heading;
             var nextStep = CurrentStep + 1;
             if (nextStep >= StepCount) nextStep = 0;
-
             var positions = Steps.ToDictionary(kvp => kvp.Key, kvp => {
 
                 return Positions[kvp.Value[CurrentStep]].Lerp(Positions[kvp.Value[nextStep]], Lerp);
             });
-
-            //foreach (var s in Steps)
-            //{
-            //    var u = Positions[s.Value[CurrentStep]].Lerp(Positions[s.Value[nextStep]], Lerp);
-            //}
-            Lerp = Lerp + 1.0 / MicroSteps;
-            if (Lerp > 1.0)
+            if (Moving)
             {
-                Lerp = 1.0 / MicroSteps;
-                IncrementStep();
+                Lerp = Lerp + 1.0 / MicroSteps;
+                if (Lerp > 1.0)
+                {
+                    Lerp = 1.0 / MicroSteps;
+                    IncrementStep();
+                }
             }
             return positions;
         }

@@ -6,9 +6,9 @@ namespace NQRW.Kinematics
 {
     public interface IKinematicEngine
     {
-        Angle BodyRoll { get; }
-        Angle BodyPitch { get; }
-        Angle BodyYaw { get; }
+        Angle BodyRoll { get; set; }
+        Angle BodyPitch { get; set; }
+        Angle BodyYaw { get; set; }
 
         double BodyX { get; set; }
         double BodyY { get; set; }
@@ -16,6 +16,7 @@ namespace NQRW.Kinematics
 
         Matrix4 BodyPosition { get; }
 
+        void SetOffsets(Dictionary<Leg, Vector3> offsets);
         Dictionary<Leg, ILeg> Legs { get; set; }
 
         void Update();

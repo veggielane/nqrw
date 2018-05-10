@@ -16,8 +16,8 @@ namespace NQRW.Robotics
         IMessageBus Bus { get; }
         ITimer Timer { get; }
         IServoController ServoController { get; }
-        IKinematicEngine Kinematic { get; }
-        IGaitEngine Gait { get; }
+        IKinematicEngine KinematicEngine { get; }
+        IGaitEngine GaitEngine { get; }
 
         void Boot();
     }
