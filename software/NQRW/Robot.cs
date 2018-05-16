@@ -81,14 +81,14 @@ namespace NQRW
             KinematicEngine.BodyPitch = Angle.FromDegrees(10);
             KinematicEngine.BodyYaw = Angle.FromDegrees(10);
 
+            var coxa = 20.0;
 
-
-            KinematicEngine.Legs.Add(Leg.LeftFront,  new Leg4DOF(Matrix4.Translate(-C, A, 0), new Vector3(-C, A, 0) - new Vector3(footPosition,0,0)));
-            KinematicEngine.Legs.Add(Leg.LeftMiddle, new Leg4DOF(Matrix4.Translate(-D, 0, 0), new Vector3(-D, 0, 0) - new Vector3(footPosition, 0, 0)));
-            KinematicEngine.Legs.Add(Leg.LeftRear,   new Leg4DOF(Matrix4.Translate(-E, -B, 0), new Vector3(-E, -B, 0) - new Vector3(footPosition, 0, 0)));
-            KinematicEngine.Legs.Add(Leg.RightFront, new Leg4DOF(Matrix4.Translate(C, A, 0), new Vector3(C, A, 0) + new Vector3(footPosition, 0, 0)));
-            KinematicEngine.Legs.Add(Leg.RightMiddle,new Leg4DOF(Matrix4.Translate(D, 0, 0), new Vector3(D, 0, 0) + new Vector3(footPosition, 0, 0)));
-            KinematicEngine.Legs.Add(Leg.RightRear,  new Leg4DOF(Matrix4.Translate(E, -B, 0), new Vector3(E, -B, 0) + new Vector3(footPosition, 0, 0)));
+            KinematicEngine.Legs.Add(Leg.LeftFront,  new Leg4DOF(Matrix4.Translate(-C, A, 0), new Vector3(-C, A, 0) - new Vector3(footPosition,0,0), coxa));
+            KinematicEngine.Legs.Add(Leg.LeftMiddle, new Leg4DOF(Matrix4.Translate(-D, 0, 0), new Vector3(-D, 0, 0) - new Vector3(footPosition, 0, 0), coxa));
+            KinematicEngine.Legs.Add(Leg.LeftRear,   new Leg4DOF(Matrix4.Translate(-E, -B, 0), new Vector3(-E, -B, 0) - new Vector3(footPosition, 0, 0), coxa));
+            KinematicEngine.Legs.Add(Leg.RightFront, new Leg4DOF(Matrix4.Translate(C, A, 0), new Vector3(C, A, 0) + new Vector3(footPosition, 0, 0), coxa));
+            KinematicEngine.Legs.Add(Leg.RightMiddle,new Leg4DOF(Matrix4.Translate(D, 0, 0), new Vector3(D, 0, 0) + new Vector3(footPosition, 0, 0), coxa));
+            KinematicEngine.Legs.Add(Leg.RightRear,  new Leg4DOF(Matrix4.Translate(E, -B, 0), new Vector3(E, -B, 0) + new Vector3(footPosition, 0, 0), coxa));
 
             //KinematicEngine.Legs.Add(Leg.LeftFront, new Leg3DOF(Matrix4.Translate(-C, A, 0)) { FootPosition = new Vector3(-C, A, 0) - new Vector3(footPosition, 0, 0) });
             //KinematicEngine.Legs.Add(Leg.LeftMiddle, new Leg3DOF(Matrix4.Translate(-D, 0, 0)) { FootPosition = new Vector3(-D, 0, 0) - new Vector3(footPosition, 0, 0) });

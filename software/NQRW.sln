@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NQRW", "NQRW\NQRW.csproj", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E5C66143-31FC-4F4F-9F45-D1A424EE816B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NQRW.Tests", "NQRW.Tests\NQRW.Tests.csproj", "{14B67229-71C0-4FD4-A8F6-C32D1B255E81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{8950C723-5717-41A9-9E6C-C620D7C71FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8950C723-5717-41A9-9E6C-C620D7C71FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8950C723-5717-41A9-9E6C-C620D7C71FDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14B67229-71C0-4FD4-A8F6-C32D1B255E81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14B67229-71C0-4FD4-A8F6-C32D1B255E81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14B67229-71C0-4FD4-A8F6-C32D1B255E81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14B67229-71C0-4FD4-A8F6-C32D1B255E81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

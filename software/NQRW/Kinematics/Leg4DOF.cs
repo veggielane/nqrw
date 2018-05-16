@@ -11,10 +11,11 @@ namespace NQRW.Kinematics
         public Vector3 FootPosition { get; set; }
         public Vector3 FootOffset { get; set; }
 
-        public Leg4DOF(Matrix4 basePosition, Vector3 footPosition)
+        public Leg4DOF(Matrix4 basePosition, Vector3 footPosition, double coxaLength)
         {
             BasePosition = basePosition;
             FootPosition = footPosition;
+            CoxaLength = coxaLength;
             FootOffset = Vector3.Zero;
         }
 
@@ -23,22 +24,32 @@ namespace NQRW.Kinematics
         public double TibiaLength { get; set; }
         public double TarsusLength { get; set; }
 
+        public Angle CoxaOffset { get; set; }
+        public Angle FemurOffset { get; set; }
+        public Angle TibiaOffset { get; set; }
+        public Angle TarsusOffset { get; set; }
+
+
+        public double Distance { get; set; } = 0;
+        public Angle Angle1 { get; set; } = Angle.Zero;
+        public Angle Angle2 { get; set; } = Angle.Zero;
+        public Angle Angle3 { get; set; } = Angle.Zero;
+        public Angle Angle4 { get; set; } = Angle.Zero;
 
         public void Update(Matrix4 bodyPosition)
         {
             var basePos = bodyPosition * BasePosition;
             var baseToFoot = (FootPosition + FootOffset) - basePos.ToVector3();
 
-            var distance = baseToFoot.Length;
-            var relative = basePos.RotationComponent.Inverse() * baseToFoot.ToMatrix4();
+            Distance = baseToFoot.Length;
+            var C = basePos.RotationComponent.Inverse() * baseToFoot.ToMatrix4();
 
 
+            Angle1 = Trig.Atan2(-C.Y, C.X);
 
+            var A = new Vector3(Angle1.Cos() * CoxaLength, - Angle1.Sin() * CoxaLength, 0);
 
-            var angle1 = Angle.FromDegrees(180.0) - Trig.Atan2(relative.Y, relative.X);
-
-
-
+            var AtoC = A - C.ToVector3();
 
             var lengthWithOffset = 0;
 

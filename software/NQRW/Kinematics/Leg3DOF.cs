@@ -27,9 +27,9 @@ namespace NQRW.Kinematics
         public Angle FemurOffset { get; set; }
         public Angle TibiaOffset { get; set; }
 
-        //public readonly Servo CoxaServo = new Servo();
-        //public readonly Servo FemurServo = new Servo();
-        // public readonly Servo TibiaServo = new Servo();
+       //public readonly Servo CoxaServo = new Servo();
+       //public readonly Servo FemurServo = new Servo();
+       //public readonly Servo TibiaServo = new Servo();
 
         public void Update(Matrix4 bodyPosition)
         {
