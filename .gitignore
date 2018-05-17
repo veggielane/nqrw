@@ -286,5 +286,4 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-*.1
-*.2
+PRO_trl.txt.*
