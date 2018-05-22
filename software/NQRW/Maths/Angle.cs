@@ -88,5 +88,7 @@ namespace NQRW.Maths
         {
             return Radians.GetHashCode();
         }
+
+        public static readonly Angle PI = FromRadians(Math.PI);
     }
 }

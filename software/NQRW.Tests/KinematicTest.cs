@@ -8,7 +8,7 @@ namespace NQRW.Tests
 {
     public class KinematicTest
     {
-        [Fact]
+
         public void LegTest()
         {
             var A = 200.0;
@@ -119,6 +119,8 @@ namespace NQRW.Tests
             Assert.Equal(9.877819, rf.Angle1.Degrees, 6);
             Assert.Equal(10.768978, rm.Angle1.Degrees, 6);
             Assert.Equal(11.223463, rr.Angle1.Degrees, 6);
+
+            Assert.Equal(90.1403926103, lf.Angle3.Degrees, 6);
 
         }
 
