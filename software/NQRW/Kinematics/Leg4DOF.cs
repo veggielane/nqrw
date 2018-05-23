@@ -50,41 +50,25 @@ namespace NQRW.Kinematics
             var foot = basePos.RotationComponent.Inverse() * baseToFoot.ToMatrix4();
             Distance = baseToFoot.Length;
 
+            var z_dash = -foot.Z;
+            var x_dash = Math.Sqrt(Math.Pow(foot.X, 2) + Math.Pow(foot.Y, 2));
+
+            var a = FemurLength;
+            var b = TibiaLength;
+            var c = TarsusLength;
+            var d = Math.Sqrt(Math.Pow(x_dash - CoxaLength, 2) + Math.Pow(z_dash, 2));
+            var theta_d = Angle.FromRadians(Math.Acos(z_dash / d));
+            var theta_b = Angle.FromRadians(Math.Acos((d * d + c * c - 2 * d * c * theta_d.Cos() - b * b - a * a) / (-2 * b * a)));
+            var e = Math.Sqrt(d * d + c * c - 2 * d * c * theta_d.Cos());
+            var theta_a1 = Angle.FromRadians(Math.Acos((a * a + e * e - b * b) / (2 * a * e)));
+            var theta_a2 = Angle.FromRadians(Math.Acos((e * e + d * d - c * c) / (2 * e * d)));
+            var theta_a = theta_a1 + theta_a2;
+            var theta_c = Angle.TwoPI - theta_a - theta_b - theta_d;
+
             Angle1 = Trig.Atan2(-foot.Y, foot.X);
-            var l = Math.Sqrt(Math.Pow(Math.Sqrt(Math.Pow(foot.X, 2) + Math.Pow(foot.Y, 2)) - CoxaLength, 2) + Math.Pow(foot.Z, 2));
-            var theta_d = Angle.FromRadians(Math.Acos(-foot.Z / l));
-            var theta_b = Angle.FromRadians(Math.Acos((l * l + TarsusLength * TarsusLength - 2 * l * TarsusLength * theta_d.Cos() - TibiaLength * TibiaLength - FemurLength * FemurLength) / (-2 * TibiaLength * FemurLength)));
-
-
-            //Math.Acos((l * TarsusLength * theta_d.Cos() - (l * l + TarsusLength * TarsusLength - TibiaLength * TibiaLength - FemurLength * FemurLength) / 2.0) / TibiaLength * FemurLength)
-
+            Angle2 = theta_d + theta_a - Angle.FromDegrees(90);
             Angle3 = Angle.PI - theta_b;
-
-
-
-
-            //var A = new Vector3(Angle1.Cos() * CoxaLength, - Angle1.Sin() * CoxaLength, 0);
-            //var AtoD = A - foot.ToVector3();
-
-            //var d = AtoD.Length;
-
-
-
-
-            //var z = -foot.Z;
-            // var x = Trig.Atan2(AtoD.Y, AtoD.X);
-
-
-
-            //var lengthWithOffset = 0;
-
-            //var relative = (basePos.RotationComponent * (baseToFoot.ToMatrix4()));
-
-
-            //var y = Angle.FromRadians(tt.DotProduct(-Vector2.UnitX));
-
-
-
+            Angle4 = Angle.PI - theta_c;
         }
     }
     public enum Leg4DOFConstraint

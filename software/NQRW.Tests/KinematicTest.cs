@@ -9,7 +9,7 @@ namespace NQRW.Tests
     public class KinematicTest
     {
 
-        public void LegTest()
+        public void LegTesto()
         {
             var A = 200.0;
             var B = 200.0;
@@ -67,7 +67,7 @@ namespace NQRW.Tests
                 
         }
         [Fact]
-        public void LegTest2()
+        public void LegTest()
         {
             var A = 200.0;
             var B = 200.0;
@@ -120,7 +120,14 @@ namespace NQRW.Tests
             Assert.Equal(10.768978, rm.Angle1.Degrees, 6);
             Assert.Equal(11.223463, rr.Angle1.Degrees, 6);
 
+
+            Assert.Equal(43.0957741551, lf.Angle2.Degrees, 6);
+            Assert.Equal(41.94122278606, lm.Angle2.Degrees, 6);
+
+
+
             Assert.Equal(90.1403926103, lf.Angle3.Degrees, 6);
+            Assert.Equal(42.9553815448, lf.Angle4.Degrees, 6);
 
         }
 
