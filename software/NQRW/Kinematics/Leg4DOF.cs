@@ -14,7 +14,7 @@ namespace NQRW.Kinematics
         public Leg4DOFConstraint Constraint { get; set; } = Leg4DOFConstraint.NormalToGround;
 
 
-        public Leg4DOF(Matrix4 basePosition, Vector3 footPosition, double coxaLength, double femurLength=76, double tibiaLength=76, double tarsusLength=90)
+        public Leg4DOF(Matrix4 basePosition, Vector3 footPosition, double coxaLength, double femurLength=76, double tibiaLength=76, double tarsusLength=96)
         {
             BasePosition = basePosition;
             FootPosition = footPosition;
@@ -50,7 +50,7 @@ namespace NQRW.Kinematics
             var foot = basePos.RotationComponent.Inverse() * baseToFoot.ToMatrix4();
             Distance = baseToFoot.Length;
 
-            var z_dash = -foot.Z;
+            var z_dash = Math.Abs(-foot.Z);
             var x_dash = Math.Sqrt(Math.Pow(foot.X, 2) + Math.Pow(foot.Y, 2));
 
             var a = FemurLength;

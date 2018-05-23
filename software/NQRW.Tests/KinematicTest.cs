@@ -67,7 +67,7 @@ namespace NQRW.Tests
                 
         }
         [Fact]
-        public void LegTest()
+        public void LegTestg()
         {
             var A = 200.0;
             var B = 200.0;
@@ -115,19 +115,32 @@ namespace NQRW.Tests
             Assert.Equal(8.152048, lf.Angle1.Degrees, 6);
             Assert.Equal(8.035559, lm.Angle1.Degrees, 6);
             Assert.Equal(7.381673, lr.Angle1.Degrees, 6);
-
             Assert.Equal(9.877819, rf.Angle1.Degrees, 6);
             Assert.Equal(10.768978, rm.Angle1.Degrees, 6);
             Assert.Equal(11.223463, rr.Angle1.Degrees, 6);
 
 
-            Assert.Equal(43.0957741551, lf.Angle2.Degrees, 6);
+            Assert.Equal(46.31991125865, lf.Angle2.Degrees, 6);
             Assert.Equal(41.94122278606, lm.Angle2.Degrees, 6);
+            Assert.Equal(29.49809188575, lr.Angle2.Degrees, 6);
+
+            Assert.Equal(50.53421042468, rr.Angle2.Degrees, 6);
+            //
+
+            Assert.Equal(90.18196678411, lf.Angle3.Degrees, 6);
+            Assert.Equal(68.16605667929, lm.Angle3.Degrees, 6);
+            Assert.Equal(32.07557756263, lr.Angle3.Degrees, 6);
+
+            Assert.Equal(25.81105087355, rr.Angle3.Degrees, 6);
+            //
+
+            Assert.Equal(46.13794447453, lf.Angle4.Degrees, 6);
+            Assert.Equal(63.77516610678, lm.Angle4.Degrees, 6);
+            Assert.Equal(87.42251432312, lr.Angle4.Degrees, 6);
+            //
+            Assert.Equal(114.7231595511, rr.Angle4.Degrees, 6);
 
 
-
-            Assert.Equal(90.1403926103, lf.Angle3.Degrees, 6);
-            Assert.Equal(42.9553815448, lf.Angle4.Degrees, 6);
 
         }
 
