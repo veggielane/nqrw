@@ -6,22 +6,17 @@ using NQRW.Maths;
 using NQRW.Messaging;
 using NQRW.Messaging.Messages;
 using NQRW.Robotics;
+using NQRW.Settings;
 using NQRW.Timing;
 using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 
 namespace NQRW
 {
-    public class Robot : IRobot, IHandle<ButtonEvent>, IHandle<AxisEvent>
+    public class Robot : BaseRobot, IHandle<ButtonEvent>, IHandle<AxisEvent>
     {
-        public string Name => "Stompy";
-        public IMessageBus Bus { get; private set; }
-        public ITimer Timer { get; private set; }
-        public IStateMachine StateMachine { get; private set; }
-        public IGaitEngine GaitEngine { get; private set; }
-        public IServoController ServoController { get; private set; }
-        public IController Controller { get; private set; }
-        public IKinematicEngine KinematicEngine { get; private set; }
+        private RobotSettings _settings = new RobotSettings();
 
         public Robot(
             IMessageBus bus, 
@@ -29,9 +24,8 @@ namespace NQRW
             IStateMachine stateMachine,
             IServoController servoController, 
             IController controller, 
-            IKinematicEngine kinematicEngine,
             IGaitEngine gaitEngine,
-            IdleState idleState, MovingState movingState)
+            IdleState idleState, MovingState movingState): base("NQRW")
         {
             Bus = bus;
             Timer = timer;
@@ -39,8 +33,6 @@ namespace NQRW
             ServoController = servoController;
             Controller = controller;
             GaitEngine = gaitEngine;
-            KinematicEngine = kinematicEngine;
-
 
             StateMachine.AddState(idleState);
             StateMachine.AddState(movingState);
@@ -75,20 +67,30 @@ namespace NQRW
 
             var footPosition = 150.0;
 
-            KinematicEngine.BodyZ = F;
+            Body.Z = F;
 
-            KinematicEngine.BodyRoll = Angle.FromDegrees(10);
-            KinematicEngine.BodyPitch = Angle.FromDegrees(10);
-            KinematicEngine.BodyYaw = Angle.FromDegrees(10);
+            Body.Roll = Angle.FromDegrees(10);
+            Body.Pitch = Angle.FromDegrees(10);
+            Body.Yaw = Angle.FromDegrees(10);
 
-            var coxa = 20.0;
 
-            KinematicEngine.Legs.Add(Leg.LeftFront,  new Leg4DOF(Matrix4.Translate(-C, A, 0), new Vector3(-C, A, 0) - new Vector3(footPosition,0,0), coxa));
-            KinematicEngine.Legs.Add(Leg.LeftMiddle, new Leg4DOF(Matrix4.Translate(-D, 0, 0), new Vector3(-D, 0, 0) - new Vector3(footPosition, 0, 0), coxa));
-            KinematicEngine.Legs.Add(Leg.LeftRear,   new Leg4DOF(Matrix4.Translate(-E, -B, 0), new Vector3(-E, -B, 0) - new Vector3(footPosition, 0, 0), coxa));
-            KinematicEngine.Legs.Add(Leg.RightFront, new Leg4DOF(Matrix4.Translate(C, A, 0), new Vector3(C, A, 0) + new Vector3(footPosition, 0, 0), coxa));
-            KinematicEngine.Legs.Add(Leg.RightMiddle,new Leg4DOF(Matrix4.Translate(D, 0, 0), new Vector3(D, 0, 0) + new Vector3(footPosition, 0, 0), coxa));
-            KinematicEngine.Legs.Add(Leg.RightRear,  new Leg4DOF(Matrix4.Translate(E, -B, 0), new Vector3(E, -B, 0) + new Vector3(footPosition, 0, 0), coxa));
+            
+
+            var LeftFront = new Leg4DOF(Matrix4.Translate(-C, A, 0), new Vector3(-C, A, 0) - new Vector3(footPosition, 0, 0), _settings.Legs[Leg.LeftFront]);
+            var LeftMiddle = new Leg4DOF(Matrix4.Translate(-D, 0, 0), new Vector3(-D, 0, 0) - new Vector3(footPosition, 0, 0), _settings.Legs[Leg.LeftMiddle]);
+            var LeftRear = new Leg4DOF(Matrix4.Translate(-E, -B, 0), new Vector3(-E, -B, 0) - new Vector3(footPosition, 0, 0), _settings.Legs[Leg.LeftRear]);
+            var RightFront = new Leg4DOF(Matrix4.Translate(C, A, 0), new Vector3(C, A, 0) + new Vector3(footPosition, 0, 0), _settings.Legs[Leg.RightFront]);
+            var RightMiddle = new Leg4DOF(Matrix4.Translate(D, 0, 0), new Vector3(D, 0, 0) + new Vector3(footPosition, 0, 0), _settings.Legs[Leg.RightMiddle]);
+            var RightRear = new Leg4DOF(Matrix4.Translate(E, -B, 0), new Vector3(E, -B, 0) + new Vector3(footPosition, 0, 0), _settings.Legs[Leg.RightRear]);
+
+            Legs.Add(Leg.LeftFront, LeftFront);
+            Legs.Add(Leg.LeftMiddle, LeftMiddle);
+            Legs.Add(Leg.LeftRear, LeftRear);
+            Legs.Add(Leg.RightFront, RightFront);
+            Legs.Add(Leg.RightMiddle, RightMiddle);
+            Legs.Add(Leg.RightRear, RightRear);
+
+            ServoController.Servos.Add(0, LeftFront.CoxaServo);
 
             //KinematicEngine.Legs.Add(Leg.LeftFront, new Leg3DOF(Matrix4.Translate(-C, A, 0)) { FootPosition = new Vector3(-C, A, 0) - new Vector3(footPosition, 0, 0) });
             //KinematicEngine.Legs.Add(Leg.LeftMiddle, new Leg3DOF(Matrix4.Translate(-D, 0, 0)) { FootPosition = new Vector3(-D, 0, 0) - new Vector3(footPosition, 0, 0) });
@@ -97,7 +99,7 @@ namespace NQRW
             //KinematicEngine.Legs.Add(Leg.RightMiddle, new Leg3DOF(Matrix4.Translate(D, 0, 0)) { FootPosition = new Vector3(D, 0, 0) + new Vector3(footPosition, 0, 0) });
             //KinematicEngine.Legs.Add(Leg.RightRear, new Leg3DOF(Matrix4.Translate(E, -B, 0)) { FootPosition = new Vector3(E, -B, 0) + new Vector3(footPosition, 0, 0) });
         }
-        public void Boot()
+        public override void Boot()
         {
             Bus.Add(new SystemMessage($"{Name} Starting"));
             ServoController.Connect();
@@ -111,9 +113,11 @@ namespace NQRW
                 return;
             }
             Timer.Ticks.Subscribe(t => {
-                var offsets = GaitEngine.Update();
-                KinematicEngine.SetOffsets(offsets);
-                KinematicEngine.Update();
+                foreach (var kvp in GaitEngine.Update())
+                {
+                    Legs[kvp.Key].FootOffset = kvp.Value;
+                }
+                InverseKinematics();
             });
             Timer.Start();
             Bus.Add(new SystemMessage("Timer Started"));
@@ -121,10 +125,11 @@ namespace NQRW
             StateMachine.Start<IdleState>();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Controller.Dispose();
         }
+
 
         public void Handle(ButtonEvent message)
         {
@@ -138,11 +143,11 @@ namespace NQRW
         {
             if(message.Axis == PS4Axis.LeftStickX)
             {
-                KinematicEngine.BodyX = MathsHelper.Map(message.Value, -32767, 32767, -15, 15);
+                Body.X = MathsHelper.Map(message.Value, -32767, 32767, -15, 15);
             }
             if (message.Axis == PS4Axis.LeftStickY)
             {
-                KinematicEngine.BodyY = MathsHelper.Map(message.Value, -32767, 32767, -15, 15);
+                Body.Y = MathsHelper.Map(message.Value, -32767, 32767, -15, 15);
             }
             if (message.Axis == PS4Axis.RightStickX)
             {

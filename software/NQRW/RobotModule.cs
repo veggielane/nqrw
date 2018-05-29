@@ -27,6 +27,9 @@ namespace NQRW
         }
         protected override void Load(ContainerBuilder builder)
         {
+
+
+
             builder.RegisterType<Robot>().As<IRobot>().SingleInstance();
 
             builder.RegisterType<MessageBus>().As<IMessageBus>().SingleInstance();
@@ -35,8 +38,6 @@ namespace NQRW
 
             builder.RegisterType<MovingState>().AsSelf().SingleInstance();
             builder.RegisterType<IdleState>().AsSelf().SingleInstance();
-
-            builder.RegisterType<KinematicEngine>().As<IKinematicEngine>().SingleInstance();
             builder.RegisterType<GaitEngine>().As<IGaitEngine>().SingleInstance();
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

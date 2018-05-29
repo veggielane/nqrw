@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using NQRW.Devices;
 using NQRW.Maths;
+using NQRW.Settings;
 
 namespace NQRW.Kinematics
 {
@@ -14,7 +16,18 @@ namespace NQRW.Kinematics
         public Leg4DOFConstraint Constraint { get; set; } = Leg4DOFConstraint.NormalToGround;
 
 
-        public Leg4DOF(Matrix4 basePosition, Vector3 footPosition, double coxaLength, double femurLength=76, double tibiaLength=76, double tarsusLength=96)
+        public Leg4DOF(Matrix4 basePosition, Vector3 footPosition, LegSettings settings)
+        {
+            BasePosition = basePosition;
+            FootPosition = footPosition;
+            CoxaLength = settings.CoxaLength;
+            FemurLength = settings.FemurLength;
+            TibiaLength = settings.TibiaLength;
+            TarsusLength = settings.TarsusLength;
+            FootOffset = Vector3.Zero;
+        }
+
+        public Leg4DOF(Matrix4 basePosition, Vector3 footPosition, double coxaLength, double femurLength, double tibiaLength, double tarsusLength)
         {
             BasePosition = basePosition;
             FootPosition = footPosition;
@@ -24,6 +37,7 @@ namespace NQRW.Kinematics
             TarsusLength = tarsusLength;
             FootOffset = Vector3.Zero;
         }
+
         //Geometry
         public double CoxaLength { get; set; }
         public double FemurLength { get; set; }
@@ -31,10 +45,10 @@ namespace NQRW.Kinematics
         public double TarsusLength { get; set; }
 
 
-        public Angle CoxaOffset { get; set; }
-        public Angle FemurOffset { get; set; }
-        public Angle TibiaOffset { get; set; }
-        public Angle TarsusOffset { get; set; }
+        public Angle CoxaOffset { get; set; } = Angle.Zero;
+        public Angle FemurOffset { get; set; } = Angle.Zero;
+        public Angle TibiaOffset { get; set; } = Angle.Zero;
+        public Angle TarsusOffset { get; set; } = Angle.Zero;
 
 
         public double Distance { get; set; } = 0;
@@ -43,7 +57,38 @@ namespace NQRW.Kinematics
         public Angle Angle3 { get; set; } = Angle.Zero;
         public Angle Angle4 { get; set; } = Angle.Zero;
 
-        public void Update(Matrix4 bodyPosition)
+        private bool CoxaInvert = false;
+        private bool FemurInvert = false;
+        private bool TibiaInvert = false;
+        private bool TarsusInvert = false;
+
+        public readonly Servo CoxaServo = new Servo();
+        public readonly Servo FemurServo = new Servo();
+        public readonly Servo TibiaServo = new Servo();
+        public readonly Servo TarsusServo = new Servo();
+
+
+
+        private void UpdateAlgorithm(Matrix4 body)
+        {
+            var basePos = body * BasePosition;
+            var baseToFoot = (FootPosition + FootOffset) - basePos.ToVector3();
+            var foot = basePos.RotationComponent.Inverse() * baseToFoot.ToMatrix4();
+            Distance = baseToFoot.Length;
+
+            var z_dash = Math.Abs(-foot.Z);
+            var x_dash = Math.Sqrt(Math.Pow(foot.X, 2) + Math.Pow(foot.Y, 2));
+
+            var a = FemurLength;
+            var b = TibiaLength;
+            var c = TarsusLength;
+            var d = Math.Sqrt(Math.Pow(x_dash - CoxaLength, 2) + Math.Pow(z_dash, 2));
+
+
+
+        }
+
+        private void UpdateNormalToGround(Matrix4 bodyPosition)
         {
             var basePos = bodyPosition * BasePosition;
             var baseToFoot = (FootPosition + FootOffset) - basePos.ToVector3();
@@ -69,10 +114,22 @@ namespace NQRW.Kinematics
             Angle2 = theta_d + theta_a - Angle.FromDegrees(90);
             Angle3 = Angle.PI - theta_b;
             Angle4 = Angle.PI - theta_c;
+
+            CoxaServo.Angle = Angle.FromRadians((CoxaInvert ? -1 : 1) * (Angle1 + CoxaOffset));
+            FemurServo.Angle = Angle.FromRadians((FemurInvert ? -1 : 1) * (Angle2 + FemurOffset));
+            TibiaServo.Angle = Angle.FromRadians((TibiaInvert ? -1 : 1) * (Angle3 + TibiaOffset));
+            TarsusServo.Angle = Angle.FromRadians((TarsusInvert ? -1 : 1) * (Angle4 + TarsusOffset));
+        }
+        public void Update(Matrix4 bodyPosition)
+        {
+            switch (Constraint)
+            {
+                case Leg4DOFConstraint.NormalToGround:
+                    UpdateNormalToGround(bodyPosition);  break;
+                case Leg4DOFConstraint.Algorithm:
+                    UpdateAlgorithm(bodyPosition); break;
+            }
         }
     }
-    public enum Leg4DOFConstraint
-    {
-        NormalToGround
-    }
+    public enum Leg4DOFConstraint { NormalToGround, Algorithm }
 }

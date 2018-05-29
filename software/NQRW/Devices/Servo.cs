@@ -5,9 +5,9 @@ namespace NQRW.Devices
     public class Servo : IServo
     {
         private Angle _angle = Angle.FromDegrees(0);
-        public Angle Min { get; private set; }
+        public Angle Min { get; private set; } = Angle.FromDegrees(-180);
 
-        public Angle Max { get; private set; }
+        public Angle Max { get; private set; } = Angle.FromDegrees(180);
 
         public Angle Offset { get; private set; }
 

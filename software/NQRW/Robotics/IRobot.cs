@@ -1,5 +1,4 @@
-﻿using NQRW.Devices;
-using NQRW.Gait;
+﻿using NQRW.Gait;
 using NQRW.Kinematics;
 using NQRW.Maths;
 using NQRW.Messaging;
@@ -15,11 +14,15 @@ namespace NQRW.Robotics
         String Name { get; }
         IMessageBus Bus { get; }
         ITimer Timer { get; }
-        IServoController ServoController { get; }
-        IKinematicEngine KinematicEngine { get; }
+
         IGaitEngine GaitEngine { get; }
 
         void Boot();
+
+        Dictionary<Leg, ILeg> Legs { get; set; }
+        IBody Body { get; set; }
+
+        void InverseKinematics();
     }
 
 }
