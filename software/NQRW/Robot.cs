@@ -1,5 +1,7 @@
 ﻿using NQRW.Devices;
+using NQRW.Devices.Input;
 using NQRW.FiniteStateMachine;
+using NQRW.FiniteStateMachine.States;
 using NQRW.Gait;
 using NQRW.Kinematics;
 using NQRW.Maths;
@@ -23,15 +25,15 @@ namespace NQRW
             ITimer timer, 
             IStateMachine stateMachine,
             IServoController servoController, 
-            IController controller, 
             IGaitEngine gaitEngine,
-            IdleState idleState, MovingState movingState): base("NQRW")
+            IInputMapping inputMapping,
+            IdleState idleState,
+            MovingState movingState): base("NQRW")
         {
             Bus = bus;
             Timer = timer;
             StateMachine = stateMachine;
             ServoController = servoController;
-            Controller = controller;
             GaitEngine = gaitEngine;
 
             StateMachine.AddState(idleState);
@@ -69,12 +71,9 @@ namespace NQRW
 
             Body.Z = F;
 
-            Body.Roll = Angle.FromDegrees(10);
-            Body.Pitch = Angle.FromDegrees(10);
-            Body.Yaw = Angle.FromDegrees(10);
-
-
-            
+            Body.Roll = Angle.FromDegrees(0);
+            Body.Pitch = Angle.FromDegrees(0);
+            Body.Yaw = Angle.FromDegrees(0);
 
             var LeftFront = new Leg4DOF(Matrix4.Translate(-C, A, 0), new Vector3(-C, A, 0) - new Vector3(footPosition, 0, 0), _settings.Legs[Leg.LeftFront]);
             var LeftMiddle = new Leg4DOF(Matrix4.Translate(-D, 0, 0), new Vector3(-D, 0, 0) - new Vector3(footPosition, 0, 0), _settings.Legs[Leg.LeftMiddle]);
@@ -91,14 +90,9 @@ namespace NQRW
             Legs.Add(Leg.RightRear, RightRear);
 
             ServoController.Servos.Add(0, LeftFront.CoxaServo);
-
-            //KinematicEngine.Legs.Add(Leg.LeftFront, new Leg3DOF(Matrix4.Translate(-C, A, 0)) { FootPosition = new Vector3(-C, A, 0) - new Vector3(footPosition, 0, 0) });
-            //KinematicEngine.Legs.Add(Leg.LeftMiddle, new Leg3DOF(Matrix4.Translate(-D, 0, 0)) { FootPosition = new Vector3(-D, 0, 0) - new Vector3(footPosition, 0, 0) });
-            //KinematicEngine.Legs.Add(Leg.LeftRear, new Leg3DOF(Matrix4.Translate(-E, -B, 0)) { FootPosition = new Vector3(-E, -B, 0) - new Vector3(footPosition, 0, 0) });
-            //KinematicEngine.Legs.Add(Leg.RightFront, new Leg3DOF(Matrix4.Translate(C, A, 0)) { FootPosition = new Vector3(C, A, 0) + new Vector3(footPosition, 0, 0) });
-            //KinematicEngine.Legs.Add(Leg.RightMiddle, new Leg3DOF(Matrix4.Translate(D, 0, 0)) { FootPosition = new Vector3(D, 0, 0) + new Vector3(footPosition, 0, 0) });
-            //KinematicEngine.Legs.Add(Leg.RightRear, new Leg3DOF(Matrix4.Translate(E, -B, 0)) { FootPosition = new Vector3(E, -B, 0) + new Vector3(footPosition, 0, 0) });
+            InputMapping = inputMapping;
         }
+
         public override void Boot()
         {
             Bus.Add(new SystemMessage($"{Name} Starting"));
@@ -112,13 +106,19 @@ namespace NQRW
                 Bus.Debug($"{ServoController.Name} Not Connected");
                 return;
             }
+
             Timer.Ticks.Subscribe(t => {
-                foreach (var kvp in GaitEngine.Update())
+                if (GaitEngine.Moving)
                 {
-                    Legs[kvp.Key].FootOffset = kvp.Value;
+                    foreach (var kvp in GaitEngine.Update())
+                    {
+                        Legs[kvp.Key].FootOffset = kvp.Value;
+                    }
                 }
                 InverseKinematics();
             });
+
+
             Timer.Start();
             Bus.Add(new SystemMessage("Timer Started"));
             Bus.Add(new SystemMessage($"{Name} Started"));
@@ -127,7 +127,7 @@ namespace NQRW
 
         public override void Dispose()
         {
-            Controller.Dispose();
+  
         }
 
 
@@ -139,23 +139,22 @@ namespace NQRW
             }
         }
 
-        public void Handle(AxisEvent message)
+        public void Handle(AxisEvent e)
         {
-            if(message.Axis == PS4Axis.LeftStickX)
+            if(e.Axis == PS4Axis.LeftStickX)
             {
-                Body.X = MathsHelper.Map(message.Value, -32767, 32767, -15, 15);
+                Body.X = MathsHelper.Map(e.Value, -32767, 32767, -15, 15);
             }
-            if (message.Axis == PS4Axis.LeftStickY)
+            if (e.Axis == PS4Axis.LeftStickY)
             {
-                Body.Y = MathsHelper.Map(message.Value, -32767, 32767, -15, 15);
+                Body.Y = MathsHelper.Map(e.Value, -32767, 32767, -15, 15);
             }
-            if (message.Axis == PS4Axis.RightStickX)
+
+            if (e.Axis == PS4Axis.RightStickX || e.Axis == PS4Axis.RightStickY)
             {
-                GaitEngine.HeadingX = MathsHelper.Map(message.Value, -32767, 32767, -15, 15);
-            }
-            if (message.Axis == PS4Axis.RightStickY)
-            {
-                GaitEngine.HeadingY = MathsHelper.Map(message.Value, -32767, 32767, -15, 15);
+                var x = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickX], -32767, 32767, -15, 15);
+                var y = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickY], -32767, 32767, -15, 15);
+                GaitEngine.Heading = new Vector2(x, y);
             }
         }
     }

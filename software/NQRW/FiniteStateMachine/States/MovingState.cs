@@ -1,7 +1,10 @@
 ﻿using NQRW.Gait;
 using NQRW.Messaging;
+using NQRW.Robotics;
+using NQRW.Timing;
+using System;
 
-namespace NQRW.FiniteStateMachine
+namespace NQRW.FiniteStateMachine.States
 {
     public class MovingState : BaseState
     {
@@ -16,6 +19,7 @@ namespace NQRW.FiniteStateMachine
             base.Start();
             _gaitEngine.Moving = true;
         }
+
         public override void Stop()
         {
             base.Stop();

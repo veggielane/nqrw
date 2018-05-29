@@ -1,6 +1,6 @@
 ﻿using NQRW.Messaging;
 
-namespace NQRW.FiniteStateMachine
+namespace NQRW.FiniteStateMachine.States
 {
     public abstract class BaseState : IState
     {

@@ -17,21 +17,8 @@ namespace NQRW.Gait
 
         public double Lerp { get; private set; }
 
+        public Vector2 Heading { get; set; } = Vector2.Zero;
 
-        public double HeadingX { get; set; } = 0;
-        public double HeadingY { get; set; } = 0;
-        public Vector2 Heading => new Vector2(HeadingX, HeadingY);
-
-
-
-
-
-        public Vector3 LeftFront { get; private set; }
-        public Vector3 LeftMiddle { get; private set; }
-        public Vector3 LeftRear { get; private set; }
-        public Vector3 RightFront { get; private set; }
-        public Vector3 RightMiddle { get; private set; }
-        public Vector3 RightRear { get; private set; }
 
         public IList<Vector3> Positions => new List<Vector3>
         {
@@ -67,7 +54,6 @@ namespace NQRW.Gait
                 {Leg.RightRear, new int[]{3, 4, 5, 5, 0, 1, 1, 2 }},
             };
 
-
         }
 
         private Vector3 PositionA => Vector3.Zero;
@@ -77,13 +63,12 @@ namespace NQRW.Gait
         private Vector3 PositionE => new Vector3(Heading / 2.0, 0);
         private Vector3 PositionF => new Vector3(Heading / 2.0, StrideHeight / 2.0);
 
-
-
         private void IncrementStep()
         {
             CurrentStep++;
             if (CurrentStep >= StepCount) CurrentStep = 0;
         }
+
         public Dictionary<Leg, Vector3> Update()
         {
             var nextStep = CurrentStep + 1;

@@ -1,4 +1,5 @@
-﻿using NQRW.Maths;
+﻿using NQRW.FiniteStateMachine;
+using NQRW.Maths;
 using NQRW.Messaging.Messages;
 using NQRW.Robotics;
 using System;
@@ -22,6 +23,10 @@ namespace NQRW
                 while ((key = Console.ReadKey().Key)!= ConsoleKey.Escape){
                     switch (key)
                     {
+
+                        case ConsoleKey.Tab:
+                            robot.StateMachine.Next<StartCommand>();
+                            break;
                         case ConsoleKey.UpArrow:
                             robot.Bus.Add(new BodyMoveMessage(Matrix4.Translate(0, 10, 0)));
                             break;

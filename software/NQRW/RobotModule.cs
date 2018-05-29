@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using Autofac.Core;
 using NQRW.Devices;
+using NQRW.Devices.Input;
 using NQRW.FiniteStateMachine;
+using NQRW.FiniteStateMachine.States;
 using NQRW.Gait;
 using NQRW.Kinematics;
 using NQRW.Messaging;
@@ -44,13 +46,15 @@ namespace NQRW
             {
                 Console.WriteLine($"Detecting OS: Windows");
                 builder.RegisterType<FakeServoController>().As<IServoController>().SingleInstance();
-                builder.RegisterType<KeyboardController>().As<IController>().SingleInstance();
+
+                builder.RegisterType<WindowsInputMapping>().As<IInputMapping>().SingleInstance();
             }
             else
             {
                 Console.WriteLine($"Detecting OS: Linux");
                 builder.RegisterType<LinuxSSC32>().As<IServoController>().SingleInstance();
-                builder.RegisterType<LinuxController>().As<IController>().SingleInstance();
+                builder.RegisterType<PS4Controller>().AsSelf().SingleInstance();
+                builder.RegisterType<LinuxInputMapping>().As<IInputMapping>().SingleInstance();
             }
         }
 

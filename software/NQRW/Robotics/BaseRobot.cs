@@ -1,4 +1,5 @@
 ﻿using NQRW.Devices;
+using NQRW.Devices.Input;
 using NQRW.FiniteStateMachine;
 using NQRW.Gait;
 using NQRW.Kinematics;
@@ -14,14 +15,14 @@ namespace NQRW.Robotics
         public IMessageBus Bus { get; protected set; }
         public ITimer Timer { get; protected set; }
 
-
         public IStateMachine StateMachine { get; protected set; }
         public IGaitEngine GaitEngine { get; protected set; }
         public IServoController ServoController { get; protected set; }
-        public IController Controller { get; protected set; }
 
         public Dictionary<Leg, ILeg> Legs { get; set; } = new Dictionary<Leg, ILeg>();
         public IBody Body { get; set; } = new Body();
+
+        public IInputMapping InputMapping { get; protected set; }
 
         public abstract void Boot();
         public abstract void Dispose();

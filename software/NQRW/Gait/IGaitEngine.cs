@@ -6,8 +6,7 @@ namespace NQRW.Gait
 {
     public interface IGaitEngine
     {
-        double HeadingX { get; set; }
-        double HeadingY { get; set; }
+        Vector2 Heading { get; set; }
 
         bool Moving { get; set; }
         Dictionary<Leg, Vector3> Update();
