@@ -19,11 +19,40 @@ namespace NQRW.Devices
         private BackgroundWorker _backgroundWorker;
         private readonly IMessageBus _bus;
 
-        public ConcurrentDictionary<PS4Button, ButtonState> Buttons { get; set; } = new ConcurrentDictionary<PS4Button, ButtonState>();
-        public ConcurrentDictionary<PS4Axis, short> Axes { get; set; } = new ConcurrentDictionary<PS4Axis, short>();
+        public Dictionary<PS4Button, ButtonState> Buttons { get; }
+
+        public Dictionary<PS4Axis, short> Axes { get;}
 
         public PS4Controller(ITimer timer, IMessageBus bus)
         {
+            Buttons = new Dictionary<PS4Button, ButtonState>()
+            {
+                {PS4Button.X, ButtonState.Released},
+                {PS4Button.Circle, ButtonState.Released},
+                {PS4Button.Triangle, ButtonState.Released},
+                {PS4Button.Square, ButtonState.Released},
+                {PS4Button.L1, ButtonState.Released},
+                {PS4Button.R1, ButtonState.Released},
+                {PS4Button.L2, ButtonState.Released},
+                {PS4Button.R2, ButtonState.Released},
+                {PS4Button.Share, ButtonState.Released},
+                {PS4Button.Options, ButtonState.Released},
+                {PS4Button.PS, ButtonState.Released},
+                {PS4Button.L3, ButtonState.Released},
+                {PS4Button.R3, ButtonState.Released}
+            };
+
+            Axes = new Dictionary<PS4Axis, short>()
+            {
+                {PS4Axis.LeftStickX, 0},
+                {PS4Axis.LeftStickY, 0},
+                {PS4Axis.L2, 0},
+                {PS4Axis.RightStickX, 0},
+                {PS4Axis.RightStickY, 0},
+                {PS4Axis.R2, 0},
+                {PS4Axis.DPadX, 0},
+                {PS4Axis.DPadY, 0}
+            };
             _bus = bus;
 
             _backgroundWorker = new BackgroundWorker()
@@ -40,26 +69,26 @@ namespace NQRW.Devices
         {
             byte[] buff = e.UserState as byte[];
 
-            if (checkBit(buff[6], (byte)EventMode.Config))
-            {
-                if (checkBit(buff[6], (byte)EventType.Button))
-                {
-                    var button = (PS4Button)buff[7];
-                    if (!Buttons.ContainsKey(button))
-                    {
-                        Console.WriteLine(button);
-                        Buttons.TryAdd(button, ButtonState.Released);
-                    }
-                }
-                if (checkBit(buff[6], (byte)EventType.Axis))
-                {
-                    var axis = (PS4Axis)buff[7];
-                    if (!Axes.ContainsKey(axis))
-                    {
-                        Axes.TryAdd(axis, 0);
-                    }
-                }
-            }
+            //if (checkBit(buff[6], (byte)EventMode.Config))
+            //{
+            //    if (checkBit(buff[6], (byte)EventType.Button))
+            //    {
+            //        var button = (PS4Button)buff[7];
+            //        if (!Buttons.ContainsKey(button))
+            //        {
+            //            Console.WriteLine(button);
+            //            Buttons.TryAdd(button, ButtonState.Released);
+            //        }
+            //    }
+            //    if (checkBit(buff[6], (byte)EventType.Axis))
+            //    {
+            //        var axis = (PS4Axis)buff[7];
+            //        if (!Axes.ContainsKey(axis))
+            //        {
+            //            Axes.TryAdd(axis, 0);
+            //        }
+            //    }
+            //}
 
             if (checkBit(buff[6], (byte)EventMode.Value))
             {
@@ -75,7 +104,6 @@ namespace NQRW.Devices
                     var axis = (PS4Axis)buff[7];
                     var value = BitConverter.ToInt16(new byte[2] { buff[4], buff[5] }, 0);
                     Axes[axis] = value;
-
                     _bus.Add(new AxisEvent(this, axis, value));
                 }
             }

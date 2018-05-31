@@ -1,6 +1,4 @@
 ﻿using NQRW.Maths;
-using System;
-using System.Text;
 
 namespace NQRW.Kinematics
 {

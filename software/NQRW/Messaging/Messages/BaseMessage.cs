@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reactive.Linq;
-using System.Text;
 
-namespace NQRW.Messaging
+namespace NQRW.Messaging.Messages
 {
     public abstract class BaseMessage : IMessage
     {
@@ -12,7 +9,10 @@ namespace NQRW.Messaging
         {
             Timestamp = DateTime.Now;
         }
+
+        public override string ToString()
+        {
+            return GetType().Name;
+        }
     }
-
-
 }

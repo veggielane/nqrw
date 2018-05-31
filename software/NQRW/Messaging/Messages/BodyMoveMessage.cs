@@ -1,7 +1,4 @@
 ﻿using NQRW.Maths;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NQRW.Messaging.Messages
 {
@@ -11,6 +8,10 @@ namespace NQRW.Messaging.Messages
         public BodyMoveMessage(Matrix4 transform)
         {
             Transform = transform;
+        }
+        public override string ToString()
+        {
+            return $"{Timestamp}: {Transform}";
         }
     }
 }

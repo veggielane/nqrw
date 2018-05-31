@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using NQRW.Devices;
 using NQRW.Maths;
 using NQRW.Settings;
@@ -66,8 +64,6 @@ namespace NQRW.Kinematics
         public readonly Servo FemurServo = new Servo();
         public readonly Servo TibiaServo = new Servo();
         public readonly Servo TarsusServo = new Servo();
-
-
 
         private void UpdateAlgorithm(Matrix4 body)
         {

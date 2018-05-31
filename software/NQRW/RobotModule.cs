@@ -5,7 +5,6 @@ using NQRW.Devices.Input;
 using NQRW.FiniteStateMachine;
 using NQRW.FiniteStateMachine.States;
 using NQRW.Gait;
-using NQRW.Kinematics;
 using NQRW.Messaging;
 using NQRW.Robotics;
 using NQRW.Timing;
@@ -40,6 +39,8 @@ namespace NQRW
 
             builder.RegisterType<MovingState>().AsSelf().SingleInstance();
             builder.RegisterType<IdleState>().AsSelf().SingleInstance();
+            builder.RegisterType<StandingState>().AsSelf().SingleInstance();
+
             builder.RegisterType<GaitEngine>().As<IGaitEngine>().SingleInstance();
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

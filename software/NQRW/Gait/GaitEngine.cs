@@ -1,9 +1,11 @@
 ﻿using NQRW.Maths;
+using NQRW.Messaging;
+using NQRW.Messaging.Messages;
 using NQRW.Robotics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reactive.Linq;
 
 namespace NQRW.Gait
 {
@@ -34,7 +36,7 @@ namespace NQRW.Gait
 
         public bool Moving { get; set; } = false;
 
-        public GaitEngine()
+        public GaitEngine(IMessageBus bus)
         {
             StrideHeight = 20.0;
             StrideLength = 20.0;
@@ -46,22 +48,17 @@ namespace NQRW.Gait
 
             Steps = new Dictionary<Leg, int[]>()
             {
-                {Leg.LeftFront, new int[]{0, 1, 1, 2, 3, 4, 5, 5 }},
-                {Leg.LeftMiddle, new int[]{ 3, 4, 5, 5, 0, 1, 1, 2 }},
-                {Leg.LeftRear, new int[]{0, 1, 1, 2, 3, 4, 5, 5 }},
-                {Leg.RightFront, new int[]{3, 4, 5, 5, 0, 1, 1, 2 }},
-                {Leg.RightMiddle, new int[]{0, 1, 1, 2, 3, 4, 5, 5 }},
-                {Leg.RightRear, new int[]{3, 4, 5, 5, 0, 1, 1, 2 }},
+                {Leg.LeftFront, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
+                {Leg.LeftMiddle, new[]{ 3, 4, 5, 5, 0, 1, 1, 2 }},
+                {Leg.LeftRear, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
+                {Leg.RightFront, new[]{3, 4, 5, 5, 0, 1, 1, 2 }},
+                {Leg.RightMiddle, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
+                {Leg.RightRear, new[]{3, 4, 5, 5, 0, 1, 1, 2 }},
             };
-
+  
+            bus.Messages.OfType<HeadingEvent>().Subscribe(e=> Heading = e.Heading);
         }
 
-        private Vector3 PositionA => Vector3.Zero;
-        private Vector3 PositionB => new Vector3(-Heading / 2.0, 0);
-        private Vector3 PositionC => new Vector3(-Heading / 2.0, StrideHeight / 2.0);
-        private Vector3 PositionD => new Vector3(0, 0, StrideHeight);
-        private Vector3 PositionE => new Vector3(Heading / 2.0, 0);
-        private Vector3 PositionF => new Vector3(Heading / 2.0, StrideHeight / 2.0);
 
         private void IncrementStep()
         {

@@ -1,7 +1,5 @@
 ﻿using NQRW.Robotics;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NQRW.Settings
 {

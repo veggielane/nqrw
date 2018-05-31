@@ -14,6 +14,4 @@ namespace NQRW.Messaging.Messages
             return $"{Timestamp}: {Message}";
         }
     }
-
-
 }

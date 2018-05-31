@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using NQRW.FiniteStateMachine.Commands;
 
 namespace NQRW.FiniteStateMachine
 {
@@ -15,7 +17,7 @@ namespace NQRW.FiniteStateMachine
         public StateMachine(IMessageBus bus)
         {
             Bus = bus;
-            //Bus.Messages.OfType<StateMachineCommandMessage>().Subscribe(m => Next(m.Command));
+            Bus.Messages.OfType<IStateCommand>().Subscribe(Next);
         }
 
         public void AddState(IState state)
@@ -48,6 +50,7 @@ namespace NQRW.FiniteStateMachine
 
         public void Start<T>() where T : class, IState
         {
+
             var state = _states.SingleOrDefault(s => s.GetType() == typeof(T));
             if (state != null)
             {
@@ -79,22 +82,14 @@ namespace NQRW.FiniteStateMachine
                     Current = state;
                     Current.Start();
                 }
+                else
+                {
+                    Console.WriteLine("State Does not exist");
+                }
             }
             else
             {
                 Console.WriteLine("Invalid State Request");
-            }
-        }
-
-
-        class StateTransition
-        {
-            public Type StateType { get; private set; }
-            public Type CommandType { get; private set; }
-            public StateTransition(Type stateType, Type commandType)
-            {
-                StateType = stateType;
-                CommandType = commandType;
             }
         }
     }

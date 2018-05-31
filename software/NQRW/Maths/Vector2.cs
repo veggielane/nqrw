@@ -6,16 +6,15 @@ namespace NQRW.Maths
     public class Vector2
     {
         /// <summary> X Component </summary>
-        public double X { get; private set; }
+        public double X { get; }
         /// <summary> Y Component </summary>
-        public double Y { get; private set; }
+        public double Y { get;  }
 
         /// <summary>
         /// Create new Vect3 from doubles
         /// </summary>
         /// <param name="x">X Component</param>
         /// <param name="y">Y Component</param>
-        /// <param name="z">Z Component</param>
         public Vector2(double x, double y)
         {
             X = x;
@@ -216,7 +215,7 @@ namespace NQRW.Maths
         }
         public override string ToString()
         {
-            return String.Format("Vect3<{0},{1}>", X, Y);
+            return String.Format("Vect2<{0},{1}>", X, Y);
         }
     }
 }

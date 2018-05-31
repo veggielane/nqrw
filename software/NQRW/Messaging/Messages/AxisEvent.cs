@@ -11,10 +11,8 @@ namespace NQRW.Messaging.Messages
             Axis = axis;
             Value = value;
         }
-        public override string ToString()
-        {
-            return $"{Timestamp}: {Axis} - {Value}";
-        }
+
+        public override string ToString() => $"{base.ToString()}: {Axis} - {Value}";
 
         public PS4Controller Controller { get; }
         public PS4Axis Axis { get; }

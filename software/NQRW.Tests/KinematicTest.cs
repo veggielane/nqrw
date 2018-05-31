@@ -1,7 +1,6 @@
 using NQRW.Kinematics;
 using NQRW.Maths;
 using NQRW.Robotics;
-using System;
 using Xunit;
 
 namespace NQRW.Tests

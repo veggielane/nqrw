@@ -23,7 +23,14 @@ namespace NQRW.Messaging
 
         public void Debug(string message)
         {
-            Add(new SystemMessage(message));
+            Add(new DebugMessage(message));
+        }
+
+        public void Debug<T>() where T : IMessage
+        {
+            Messages.OfType<T>().Subscribe(m => {
+                Add(new DebugMessage(m.ToString()));
+            });
         }
 
         public void Handle(object o)
@@ -36,6 +43,18 @@ namespace NQRW.Messaging
                     Messages.Where(m => m.GetType() == t).Subscribe(m => o.GetType().GetMethod("Handle", new[] { t }).Invoke(o,new object[] { m }));
                 }
             }
+        }
+
+        public void System(string message)
+        {
+            Add(new SystemMessage(message));
+        }
+
+        public void System<T>() where T : IMessage
+        {
+            Messages.OfType<T>().Subscribe(m => {
+                Add(new SystemMessage(m.ToString()));
+            });
         }
     }
 }

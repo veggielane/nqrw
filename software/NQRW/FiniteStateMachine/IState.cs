@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace NQRW.FiniteStateMachine
+﻿namespace NQRW.FiniteStateMachine
 {
     public interface IState
     {

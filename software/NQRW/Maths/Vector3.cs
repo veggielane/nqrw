@@ -6,11 +6,11 @@ namespace NQRW.Maths
     public class Vector3
     {
         /// <summary> X Component </summary>
-        public double X { get; private set; }
+        public double X { get; }
         /// <summary> Y Component </summary>
-        public double Y { get; private set; }
+        public double Y { get; }
         /// <summary> Z Component </summary>
-        public double Z { get; private set; }
+        public double Z { get; }
 
         /// <summary>
         /// Create new Vect3 from doubles

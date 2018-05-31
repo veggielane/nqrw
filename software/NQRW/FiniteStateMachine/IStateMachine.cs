@@ -1,4 +1,6 @@
-﻿namespace NQRW.FiniteStateMachine
+﻿using NQRW.FiniteStateMachine.Commands;
+
+namespace NQRW.FiniteStateMachine
 {
     public interface IStateMachine
     {

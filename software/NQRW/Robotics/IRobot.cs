@@ -2,12 +2,10 @@
 using NQRW.FiniteStateMachine;
 using NQRW.Gait;
 using NQRW.Kinematics;
-using NQRW.Maths;
 using NQRW.Messaging;
 using NQRW.Timing;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NQRW.Robotics
 {
