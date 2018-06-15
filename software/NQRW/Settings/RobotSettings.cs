@@ -1,5 +1,6 @@
 ﻿using NQRW.Robotics;
 using System.Collections.Generic;
+using NQRW.Maths;
 
 namespace NQRW.Settings
 {
@@ -25,6 +26,10 @@ namespace NQRW.Settings
         public double TibiaLength { get; set; }
         public double TarsusLength { get; set; }
 
+        public Angle CoxaOffset { get; set; } = Angle.Zero;
+        public Angle FemurOffset { get; set; } = Angle.Zero;
+        public Angle TibiaOffset { get; set; } = Angle.Zero;
+        public Angle TarsusOffset { get; set; } = Angle.Zero;
 
         public static LegSettings Default => new LegSettings(20,76,76,96);
         public LegSettings(double coxaLength, double femurLength, double tibiaLength, double tarsusLength)

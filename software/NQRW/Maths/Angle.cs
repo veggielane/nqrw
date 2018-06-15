@@ -41,10 +41,7 @@ namespace NQRW.Maths
             return "Angle<" + Degrees + "\x00B0>";
         }
 
-        public static Angle Zero
-        {
-            get { return new Angle(0); }
-        }
+        public static Angle Zero => new Angle(0);
 
         public static Angle operator +(Angle a1, Angle a2)
         {
@@ -90,5 +87,6 @@ namespace NQRW.Maths
 
         public static readonly Angle PI = FromRadians(Math.PI);
         public static readonly Angle TwoPI = FromRadians(Math.PI*2);
+
     }
 }

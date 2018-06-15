@@ -20,8 +20,8 @@ namespace NQRW
                 robot.Bus.Messages.OfType<DebugMessage>().Subscribe(m => {
                     Console.WriteLine(m.ToString());
                 });
-                robot.Bus.Debug<HeadingEvent>();
-                robot.Bus.Debug<ButtonEvent>();
+                //robot.Bus.Debug<HeadingEvent>();
+                //robot.Bus.Debug<ButtonEvent>();
 
                 robot.Boot();
                 ConsoleKey key;

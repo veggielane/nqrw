@@ -1,6 +1,7 @@
 ﻿using RJCP.IO.Ports;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Threading;
 
@@ -12,7 +13,7 @@ namespace NQRW.Devices
 
         public LinuxSSC32() : base("LinuxSSC32")
         {
-            _port = new SerialPortStream("/dev/ttyUSB0", 9600, 8, Parity.None, StopBits.One);
+            _port = new SerialPortStream("/dev/ttyUSB0", 115200, 8, Parity.None, StopBits.One);
         }
 
         public override void Connect()
@@ -39,13 +40,17 @@ namespace NQRW.Devices
             Execute("STOP");
         }
 
+
+        private void Write(byte[] bytes)
+        {
+            _port.Write(bytes,0,bytes.Length);
+        }
         public override void Update()
         {
-            //var bw = new BinaryWriter(_port.BaseStream);
-            //foreach (var kvp in Servos)
-            //{
-            //    bw.Write(new[] { (byte)(0x80 + kvp.Key), (byte)((kvp.Value.Pulse >> 8) & 0xff), (byte)(kvp.Value.Pulse & 0xff) });
-            //}
+            foreach (var kvp in Servos)
+            {
+                Write(new[] { (byte)(0x80 + kvp.Key), (byte)((kvp.Value.Pulse >> 8) & 0xff), (byte)(kvp.Value.Pulse & 0xff) });
+            }
             //if (speed != null)
             //{
             //    bw.Write(new[] { (byte)0xA0, (byte)((speed >> 8) & 0xff), (byte)(speed & 0xff) });

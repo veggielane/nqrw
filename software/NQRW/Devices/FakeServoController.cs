@@ -34,7 +34,7 @@ namespace NQRW.Devices
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
