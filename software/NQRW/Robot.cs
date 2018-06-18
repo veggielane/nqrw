@@ -69,24 +69,87 @@ namespace NQRW
              *  F Body Height
              */
              _settings  = new RobotSettings();
-            //_settings.Legs[Leg.LeftFront].CoxaOffset = Angle.PI;
-            //_settings.Legs[Leg.LeftMiddle].CoxaOffset = Angle.PI;
-            //_settings.Legs[Leg.LeftRear].CoxaOffset = Angle.PI;
 
+            //FemurOffset = Angle.FromDegrees(12.0),
+            //TibiaOffset = Angle.FromDegrees(70.0),
+            //TarsusOffset = Angle.FromDegrees(40.0)
+
+            _settings.Legs[Leg.LeftFront].CoxaOffset = Angle.FromDegrees(54.0);
+            _settings.Legs[Leg.LeftFront].CoxaInvert = true;
+            _settings.Legs[Leg.LeftFront].FemurOffset = Angle.FromDegrees(12.0);
+            _settings.Legs[Leg.LeftFront].FemurInvert = true;
+            _settings.Legs[Leg.LeftFront].TibiaOffset = Angle.FromDegrees(70.0);
+            _settings.Legs[Leg.LeftFront].TibiaInvert = true;
+            _settings.Legs[Leg.LeftFront].TarsusOffset = Angle.FromDegrees(40.0);
+            _settings.Legs[Leg.LeftFront].TarsusInvert = true;
+            
             _settings.Legs[Leg.LeftMiddle].CoxaOffset = Angle.FromDegrees(0.0);
-            _settings.Legs[Leg.LeftMiddle].FemurOffset = Angle.FromDegrees(12);
-            _settings.Legs[Leg.LeftMiddle].TibiaOffset = Angle.FromDegrees(0.0);
-            _settings.Legs[Leg.LeftMiddle].TarsusOffset = Angle.FromDegrees(0.0);
+            _settings.Legs[Leg.LeftMiddle].CoxaInvert = true;
+            _settings.Legs[Leg.LeftMiddle].FemurOffset = Angle.FromDegrees(12.0);
+            _settings.Legs[Leg.LeftMiddle].FemurInvert = true;
+            _settings.Legs[Leg.LeftMiddle].TibiaOffset = Angle.FromDegrees(70.0);
+            _settings.Legs[Leg.LeftMiddle].TibiaInvert = true;
+            _settings.Legs[Leg.LeftMiddle].TarsusOffset = Angle.FromDegrees(40.0);
+            _settings.Legs[Leg.LeftMiddle].TarsusInvert = true;
 
-            var A = 95.0;
-            var B = 95.0;
+            _settings.Legs[Leg.LeftRear].CoxaOffset = Angle.FromDegrees(-42.0);
+            _settings.Legs[Leg.LeftRear].CoxaInvert = true;
+            _settings.Legs[Leg.LeftRear].FemurOffset = Angle.FromDegrees(12.0);
+            _settings.Legs[Leg.LeftRear].FemurInvert = true;
+            _settings.Legs[Leg.LeftRear].TibiaOffset = Angle.FromDegrees(70.0);
+            _settings.Legs[Leg.LeftRear].TibiaInvert = true;
+            _settings.Legs[Leg.LeftRear].TarsusOffset = Angle.FromDegrees(30.0);
+            _settings.Legs[Leg.LeftRear].TarsusInvert = true;
+
+
+
+
+
+            _settings.Legs[Leg.RightFront].CoxaOffset = Angle.FromDegrees(-40);
+            _settings.Legs[Leg.RightFront].CoxaInvert = false;
+            _settings.Legs[Leg.RightFront].FemurOffset = Angle.FromDegrees(-12.0);
+            _settings.Legs[Leg.RightFront].FemurInvert = false;
+            _settings.Legs[Leg.RightFront].TibiaOffset = Angle.FromDegrees(-70.0);
+            _settings.Legs[Leg.RightFront].TibiaInvert = false;
+            _settings.Legs[Leg.RightFront].TarsusOffset = Angle.FromDegrees(-40.0);
+            _settings.Legs[Leg.RightFront].TarsusInvert = false;
+
+            _settings.Legs[Leg.RightMiddle].CoxaOffset = Angle.FromDegrees(-5);
+            _settings.Legs[Leg.RightMiddle].CoxaInvert = false;
+            _settings.Legs[Leg.RightMiddle].FemurOffset = Angle.FromDegrees(-12.0);
+            _settings.Legs[Leg.RightMiddle].FemurInvert = false;
+            _settings.Legs[Leg.RightMiddle].TibiaOffset = Angle.FromDegrees(-70.0);
+            _settings.Legs[Leg.RightMiddle].TibiaInvert = false;
+            _settings.Legs[Leg.RightMiddle].TarsusOffset = Angle.FromDegrees(-40.0);
+            _settings.Legs[Leg.RightMiddle].TarsusInvert = false;
+
+
+            _settings.Legs[Leg.RightRear].CoxaOffset = Angle.FromDegrees(44.0);
+            _settings.Legs[Leg.RightRear].CoxaInvert = false;
+            _settings.Legs[Leg.RightRear].FemurOffset = Angle.FromDegrees(-12.0);
+            _settings.Legs[Leg.RightRear].FemurInvert = false;
+            _settings.Legs[Leg.RightRear].TibiaOffset = Angle.FromDegrees(-70.0);
+            _settings.Legs[Leg.RightRear].TibiaInvert = false;
+            _settings.Legs[Leg.RightRear].TarsusOffset = Angle.FromDegrees(-40.0);
+            _settings.Legs[Leg.RightRear].TarsusInvert = false;
+
+
+
+
+
+            //_settings.Legs[Leg.LeftMiddle].CoxaOffset = Angle.FromDegrees(0.0);
+            //_settings.Legs[Leg.LeftMiddle].FemurOffset = Angle.FromDegrees(12.0);
+            //_settings.Legs[Leg.LeftMiddle].TarsusOffset = Angle.FromDegrees(40.0);
+
+            var A = 97.5;
+            var B = 97.5;
 
             var C = 50.0;
-            var D = 60.0;
+            var D = 55.0;
             var E = 50.0;
-            var F = 60.0;
+            var F = 90.0;
 
-            var footPosition = 100.0;
+            var footPosition = 100;
 
             Body.Z = F;
 
@@ -108,11 +171,39 @@ namespace NQRW
             Legs.Add(Leg.RightMiddle, _rightMiddle);
             Legs.Add(Leg.RightRear, _rightRear);
 
-            //ServoController.Servos.Add(20, leftMiddle.TarsusServo);
 
-            //ServoController.Servos.Add(21, leftMiddle.TibiaServo);
+
+            ServoController.Servos.Add(0, _rightRear.TarsusServo);
+            ServoController.Servos.Add(1, _rightRear.TibiaServo);
+            ServoController.Servos.Add(2, _rightRear.FemurServo);
+            ServoController.Servos.Add(3, _rightRear.CoxaServo);
+
+            ServoController.Servos.Add(4, _rightMiddle.TarsusServo);
+            ServoController.Servos.Add(5, _rightMiddle.TibiaServo);
+            ServoController.Servos.Add(6, _rightMiddle.FemurServo);
+            ServoController.Servos.Add(7, _rightMiddle.CoxaServo);
+
+            ServoController.Servos.Add(12, _rightFront.TarsusServo);
+            ServoController.Servos.Add(13, _rightFront.TibiaServo);
+            ServoController.Servos.Add(14, _rightFront.FemurServo);
+            ServoController.Servos.Add(15, _rightFront.CoxaServo);
+
+
+            ServoController.Servos.Add(16, _leftRear.TarsusServo);
+            ServoController.Servos.Add(17, _leftRear.TibiaServo);
+            ServoController.Servos.Add(18, _leftRear.FemurServo);
+            ServoController.Servos.Add(19, _leftRear.CoxaServo);
+
+            ServoController.Servos.Add(20, _leftMiddle.TarsusServo);
+            ServoController.Servos.Add(21, _leftMiddle.TibiaServo);
             ServoController.Servos.Add(22, _leftMiddle.FemurServo);
             ServoController.Servos.Add(23, _leftMiddle.CoxaServo);
+
+            ServoController.Servos.Add(28, _leftFront.TarsusServo);
+            ServoController.Servos.Add(29, _leftFront.TibiaServo);
+            ServoController.Servos.Add(30, _leftFront.FemurServo);
+            ServoController.Servos.Add(31, _leftFront.CoxaServo);
+
 
             InputMapping = inputMapping;
         }
@@ -139,9 +230,9 @@ namespace NQRW
                 //        Legs[kvp.Key].FootOffset = kvp.Value;
                 //    }
                 //}
-
+                
                 //Console.WriteLine($"kin");
-                //InverseKinematics();
+                InverseKinematics();
                 //Bus.Debug(Legs[Leg.LeftMiddle].ToString());
                 ServoController.Update();
             });
@@ -164,18 +255,15 @@ namespace NQRW
             {
                 Bus.Add(new StartCommand());
             }
+            if (message.Is(PS4Button.L1, ButtonState.Released))
+            {
+                Body.Z -= 5.0;
+            }
+            if (message.Is(PS4Button.R1, ButtonState.Released))
+            {
+                Body.Z += 5.0;
+            }
 
-            if (message.Is(PS4Button.Circle, ButtonState.Released))
-            {
-                _leftMiddle.FemurServo.Offset += Angle.FromDegrees(1);
-                Console.WriteLine(_leftMiddle.FemurServo.Offset.Degrees);
-            }
-            if (message.Is(PS4Button.Triangle, ButtonState.Released))
-            {
-                _leftMiddle.FemurServo.Offset -= Angle.FromDegrees(1);
-                Console.WriteLine(_leftMiddle.FemurServo.Offset.Degrees);
-            }
- 
         }
 
         public void Handle(AxisEvent e)

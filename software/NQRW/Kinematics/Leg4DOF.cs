@@ -7,6 +7,7 @@ namespace NQRW.Kinematics
 {
     public class Leg4DOF : ILeg
     {
+        private readonly LegSettings _settings;
         public Matrix4 BasePosition { get; private set; }
         public Vector3 FootPosition { get; set; }
         public Vector3 FootOffset { get; set; }
@@ -16,12 +17,13 @@ namespace NQRW.Kinematics
 
         public Leg4DOF(Matrix4 basePosition, Vector3 footPosition, LegSettings settings)
         {
+            _settings = settings;
             BasePosition = basePosition;
             FootPosition = footPosition;
-            CoxaLength = settings.CoxaLength;
-            FemurLength = settings.FemurLength;
-            TibiaLength = settings.TibiaLength;
-            TarsusLength = settings.TarsusLength;
+            //CoxaLength = settings.CoxaLength;
+            //FemurLength = settings.FemurLength;
+            //TibiaLength = settings.TibiaLength;
+            //TarsusLength = settings.TarsusLength;
 
             FootOffset = Vector3.Zero;
             CoxaServo = new Servo
@@ -40,28 +42,31 @@ namespace NQRW.Kinematics
             {
                 Offset = settings.TarsusOffset
             };
+
+
+
         }
 
-        public Leg4DOF(Matrix4 basePosition, Vector3 footPosition, double coxaLength, double femurLength, double tibiaLength, double tarsusLength)
-        {
-            BasePosition = basePosition;
-            FootPosition = footPosition;
-            CoxaLength = coxaLength;
-            FemurLength = femurLength;
-            TibiaLength = tibiaLength;
-            TarsusLength = tarsusLength;
-            FootOffset = Vector3.Zero;
-            CoxaServo = new Servo();
-            FemurServo = new Servo();
-            TibiaServo = new Servo();
-            TarsusServo = new Servo();
-        }
+        //public Leg4DOF(Matrix4 basePosition, Vector3 footPosition, double coxaLength, double femurLength, double tibiaLength, double tarsusLength)
+        //{
+        //    BasePosition = basePosition;
+        //    FootPosition = footPosition;
+        //    CoxaLength = coxaLength;
+        //    FemurLength = femurLength;
+        //    TibiaLength = tibiaLength;
+        //    TarsusLength = tarsusLength;
+        //    FootOffset = Vector3.Zero;
+        //    CoxaServo = new Servo();
+        //    FemurServo = new Servo();
+        //    TibiaServo = new Servo();
+        //    TarsusServo = new Servo();
+        //}
 
         //Geometry
-        public double CoxaLength { get; set; }
-        public double FemurLength { get; set; }
-        public double TibiaLength { get; set; }
-        public double TarsusLength { get; set; }
+        //public double CoxaLength { get; set; }
+        //public double FemurLength { get; set; }
+        //public double TibiaLength { get; set; }
+        //public double TarsusLength { get; set; }
 
 
         //public Angle CoxaOffset { get; set; } = Angle.Zero;
@@ -76,10 +81,10 @@ namespace NQRW.Kinematics
         public Angle Angle3 { get; set; } = Angle.Zero;
         public Angle Angle4 { get; set; } = Angle.Zero;
 
-        private bool CoxaInvert = false;
-        private bool FemurInvert = true;
-        private bool TibiaInvert = false;
-        private bool TarsusInvert = false;
+        //private bool CoxaInvert = false;
+        //private bool FemurInvert = true;
+        //private bool TibiaInvert = true;
+        //private bool TarsusInvert = true;
 
         public readonly Servo CoxaServo;
         public readonly Servo FemurServo;
@@ -120,10 +125,10 @@ namespace NQRW.Kinematics
             var z_dash = Math.Abs(-foot.Z);
             var x_dash = Math.Sqrt(Math.Pow(foot.X, 2) + Math.Pow(foot.Y, 2));
 
-            var a = FemurLength;
-            var b = TibiaLength;
-            var c = TarsusLength;
-            var d = Math.Sqrt(Math.Pow(x_dash - CoxaLength, 2) + Math.Pow(z_dash, 2));
+            var a = _settings.FemurLength;
+            var b = _settings.TibiaLength;
+            var c = _settings.TarsusLength;
+            var d = Math.Sqrt(Math.Pow(x_dash - _settings.CoxaLength, 2) + Math.Pow(z_dash, 2));
             var theta_d = Angle.FromRadians(Math.Acos(z_dash / d));
             var theta_b = Angle.FromRadians(Math.Acos((d * d + c * c - 2 * d * c * theta_d.Cos() - b * b - a * a) / (-2 * b * a)));
             var e = Math.Sqrt(d * d + c * c - 2 * d * c * theta_d.Cos());
@@ -138,11 +143,11 @@ namespace NQRW.Kinematics
             Angle3 = Angle.PI - theta_b;
             Angle4 = Angle.PI - theta_c;
 
-            CoxaServo.Angle = Angle.FromRadians((CoxaInvert ? -1 : 1) * (Angle1));
+            CoxaServo.Angle = Angle.FromRadians((_settings.CoxaInvert ? -1 : 1) * (Angle1));
 
-            FemurServo.Angle = Angle.FromRadians((FemurInvert ? -1 : 1) * (Angle2));
-            TibiaServo.Angle = Angle.FromRadians((TibiaInvert ? -1 : 1) * (Angle3));
-            TarsusServo.Angle = Angle.FromRadians((TarsusInvert ? -1 : 1) * (Angle4));
+            FemurServo.Angle = Angle.FromRadians((_settings.FemurInvert ? -1 : 1) * (Angle2));
+            TibiaServo.Angle = Angle.FromRadians((_settings.TibiaInvert ? -1 : 1) * (Angle3));
+            TarsusServo.Angle = Angle.FromRadians((_settings.TarsusInvert ? -1 : 1) * (Angle4));
         }
         public void Update(Matrix4 bodyPosition)
         {

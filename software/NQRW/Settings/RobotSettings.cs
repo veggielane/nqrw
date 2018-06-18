@@ -31,7 +31,20 @@ namespace NQRW.Settings
         public Angle TibiaOffset { get; set; } = Angle.Zero;
         public Angle TarsusOffset { get; set; } = Angle.Zero;
 
-        public static LegSettings Default => new LegSettings(20,76,76,96);
+
+        public bool CoxaInvert { get; set; } = false;
+        public bool FemurInvert { get; set; } = false;
+        public bool TibiaInvert { get; set; } = false;
+        public bool TarsusInvert { get; set; } = false;
+
+
+        public static LegSettings Default => new LegSettings(20, 77, 73, 90)
+        {
+            CoxaOffset = Angle.Zero,
+            FemurOffset = Angle.FromDegrees(12.0),
+            TibiaOffset = Angle.FromDegrees(70.0),
+            TarsusOffset = Angle.FromDegrees(40.0)
+        };
         public LegSettings(double coxaLength, double femurLength, double tibiaLength, double tarsusLength)
         {
             CoxaLength = coxaLength;
