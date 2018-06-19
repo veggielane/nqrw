@@ -10,6 +10,7 @@ using NQRW.Robotics;
 using NQRW.Timing;
 using System;
 using System.Runtime.InteropServices;
+using NQRW.Settings;
 
 namespace NQRW
 {
@@ -42,6 +43,8 @@ namespace NQRW
             builder.RegisterType<StandingState>().AsSelf().SingleInstance();
 
             builder.RegisterType<GaitEngine>().As<IGaitEngine>().SingleInstance();
+
+            builder.Register<RobotSettings>(ctx => RobotSettings.LoadFromFile("settings.json")).SingleInstance();
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {

@@ -12,17 +12,14 @@ namespace NQRW.Maths
         {
             return new Vector3(m.X, m.Y, m.Z);
         }
-
         public static Matrix4 ToMatrix4(this Vector3 v)
         {
             return Matrix4.Translate(v);
         }
-
         public static double Pow(this double x, double power)
         {
             return Math.Pow(x, power);
         }
-
         public static double Sqrt(this double x)
         {
             return Math.Pow(x, 0.5);
@@ -31,23 +28,19 @@ namespace NQRW.Maths
         {
             return Math.Sin(a.Radians);
         }
-
         public static double Cos(this Angle a)
         {
             return Math.Cos(a.Radians);
         }
-
         public static double Tan(this Angle a)
         {
             return Math.Tan(a.Radians);
         }
-
         public static double Map(this double x, double inMin, double inMax, double outMin, double outMax)
         {
             return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
         }
-
-        public static bool NearlyEquals(this Double x, Double y, Double epsilon = 0.0000001)
+        public static bool NearlyEquals(this double x, double y, double epsilon = 0.0000001)
         {
             return Math.Abs(x - y) <= Math.Abs(x * .00001);
         }
@@ -56,12 +49,12 @@ namespace NQRW.Maths
             return Math.Abs(x - y) <= Math.Abs(x * .00001);
         }
 
-        public static bool NearlyLessThanOrEquals(this Double x, Double y, Double epsilon = 0.0000001)
+        public static bool NearlyLessThanOrEquals(this double x, double y, double epsilon = 0.0000001)
         {
             return x <= y || x.NearlyEquals(y, epsilon);
         }
 
-        public static bool NearlyGreaterThanOrEquals(this Double x, Double y, Double epsilon = 0.0000001)
+        public static bool NearlyGreaterThanOrEquals(this double x, double y, double epsilon = 0.0000001)
         {
             return x >= y || x.NearlyEquals(y, epsilon);
         }
@@ -100,17 +93,13 @@ namespace NQRW.Maths
         {
             return Math.Max(x, y);
         }
-
         public static double Min(double x, double y, double z)
         {
             return Math.Min(x, Math.Min(y, z));
         }
-
         public static double Min(double w, double x, double y, double z)
         {
             return Math.Min(w, Math.Min(x, Math.Min(y, z)));
         }
-
-
     }
 }

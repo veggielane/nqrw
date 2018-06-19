@@ -17,9 +17,10 @@ namespace NQRW
 {
     public class Robot : BaseRobot, IHandle<ButtonEvent>, IHandle<AxisEvent>
     {
-        private RobotSettings _settings;
+        private RobotSettingsOld _settings;
         private Leg4DOF _leftFront;
         private Leg4DOF _leftMiddle;
+
         private Leg4DOF _leftRear;
         private Leg4DOF _rightFront;
         private Leg4DOF _rightMiddle;
@@ -32,10 +33,14 @@ namespace NQRW
             IServoController servoController, 
             IGaitEngine gaitEngine,
             IInputMapping inputMapping,
+            RobotSettings settings,
             IdleState idleState,
             MovingState movingState,
             StandingState standingState): base("NQRW")
         {
+
+            
+
             Bus = bus;
             Timer = timer;
             StateMachine = stateMachine;
@@ -68,20 +73,31 @@ namespace NQRW
              * 
              *  F Body Height
              */
-             _settings  = new RobotSettings();
+            _settings = new RobotSettingsOld
+            {
+                Legs =
+                {
+                    {
+                        Leg.LeftFront, new LegSettings(20, 77, 73, 90)
+                        {
+                            CoxaOffset = Angle.FromDegrees(54.0),
+                            CoxaInvert = true,
+                            FemurOffset = Angle.FromDegrees(12.0),
+                            FemurInvert = true,
+                            TibiaOffset = Angle.FromDegrees(70.0),
+                            TibiaInvert = true,
+                            TarsusOffset = Angle.FromDegrees(40.0),
+                            TarsusInvert = true
+                        }
+                    }
+                }
+            };
 
             //FemurOffset = Angle.FromDegrees(12.0),
             //TibiaOffset = Angle.FromDegrees(70.0),
             //TarsusOffset = Angle.FromDegrees(40.0)
 
-            _settings.Legs[Leg.LeftFront].CoxaOffset = Angle.FromDegrees(54.0);
-            _settings.Legs[Leg.LeftFront].CoxaInvert = true;
-            _settings.Legs[Leg.LeftFront].FemurOffset = Angle.FromDegrees(12.0);
-            _settings.Legs[Leg.LeftFront].FemurInvert = true;
-            _settings.Legs[Leg.LeftFront].TibiaOffset = Angle.FromDegrees(70.0);
-            _settings.Legs[Leg.LeftFront].TibiaInvert = true;
-            _settings.Legs[Leg.LeftFront].TarsusOffset = Angle.FromDegrees(40.0);
-            _settings.Legs[Leg.LeftFront].TarsusInvert = true;
+            
             
             _settings.Legs[Leg.LeftMiddle].CoxaOffset = Angle.FromDegrees(0.0);
             _settings.Legs[Leg.LeftMiddle].CoxaInvert = true;
@@ -100,10 +116,6 @@ namespace NQRW
             _settings.Legs[Leg.LeftRear].TibiaInvert = true;
             _settings.Legs[Leg.LeftRear].TarsusOffset = Angle.FromDegrees(30.0);
             _settings.Legs[Leg.LeftRear].TarsusInvert = true;
-
-
-
-
 
             _settings.Legs[Leg.RightFront].CoxaOffset = Angle.FromDegrees(-40);
             _settings.Legs[Leg.RightFront].CoxaInvert = false;
@@ -133,17 +145,8 @@ namespace NQRW
             _settings.Legs[Leg.RightRear].TarsusOffset = Angle.FromDegrees(-40.0);
             _settings.Legs[Leg.RightRear].TarsusInvert = false;
 
-
-
-
-
-            //_settings.Legs[Leg.LeftMiddle].CoxaOffset = Angle.FromDegrees(0.0);
-            //_settings.Legs[Leg.LeftMiddle].FemurOffset = Angle.FromDegrees(12.0);
-            //_settings.Legs[Leg.LeftMiddle].TarsusOffset = Angle.FromDegrees(40.0);
-
             var A = 97.5;
             var B = 97.5;
-
             var C = 50.0;
             var D = 55.0;
             var E = 50.0;

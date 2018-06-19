@@ -6,11 +6,11 @@ namespace NQRW.Devices
     {
         private Angle _angle = Angle.Zero;
 
-        public Angle Min { get; private set; } = Angle.FromDegrees(-180);
+        public Angle Min { get; }
 
-        public Angle Max { get; private set; } = Angle.FromDegrees(180);
+        public Angle Max { get; }
 
-        public Angle Offset { get; set; } = Angle.Zero;
+        public Angle Offset { get; }
 
         public Angle Angle
         {
@@ -32,6 +32,20 @@ namespace NQRW.Devices
             }
         }
 
-        public int Pulse => (int)(Angle+Offset).Radians.Map(-Trig.PiOverTwo, Trig.PiOverTwo, 600.0, 2400.0);
+        public int Pulse => (int)(Angle + Offset).Radians.Map(-Trig.PiOverTwo, Trig.PiOverTwo, 600.0, 2400.0);
+
+        public Servo(Angle angle, Angle offset):this(angle,offset,-Angle.PI, Angle.PI)
+        {
+            Angle = angle;
+            Offset = offset;
+        }
+
+        public Servo(Angle angle, Angle offset, Angle min, Angle max)
+        {
+            Angle = angle;
+            Offset = offset;
+            Min = min;
+            Max = max;
+        }
     }
 }
