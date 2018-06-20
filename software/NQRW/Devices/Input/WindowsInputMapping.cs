@@ -1,6 +1,6 @@
 ﻿namespace NQRW.Devices.Input
 {
-    public class WindowsInputMapping: BaseInputMapping
+    public class WindowsInputMapping: IPlatformInput
     {
 
     }

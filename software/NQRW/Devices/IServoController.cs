@@ -12,6 +12,5 @@ namespace NQRW.Devices
         void Stop();
         void Disconnect();
         void Update();
-        void Execute();
     }
 }

@@ -14,16 +14,14 @@ namespace NQRW.Robotics
         String Name { get; }
         IMessageBus Bus { get; }
         ITimer Timer { get; }
-
         IGaitEngine GaitEngine { get; }
-
         IStateMachine StateMachine { get;  }
-        IInputMapping InputMapping { get; }
-        void Boot();
+        IPlatformInput Input { get; }
+
 
         Dictionary<Leg, ILeg> Legs { get; set; }
         IBody Body { get; set; }
-
+        void Boot();
         void InverseKinematics();
     }
 

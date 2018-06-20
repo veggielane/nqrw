@@ -16,7 +16,6 @@ namespace NQRW
 {
     public class RobotModule : Module
     {
-       
         protected override void AttachToComponentRegistration(IComponentRegistry registry, IComponentRegistration registration)
         {
             registration.Activated += OnComponentActivated;
@@ -29,36 +28,27 @@ namespace NQRW
         }
         protected override void Load(ContainerBuilder builder)
         {
-
-
-
             builder.RegisterType<Robot>().As<IRobot>().SingleInstance();
-
             builder.RegisterType<MessageBus>().As<IMessageBus>().SingleInstance();
             builder.RegisterType<Timer>().As<ITimer>().SingleInstance();
             builder.RegisterType<StateMachine>().As<IStateMachine>().SingleInstance();
-
             builder.RegisterType<MovingState>().AsSelf().SingleInstance();
             builder.RegisterType<IdleState>().AsSelf().SingleInstance();
             builder.RegisterType<StandingState>().AsSelf().SingleInstance();
-
             builder.RegisterType<GaitEngine>().As<IGaitEngine>().SingleInstance();
-
             builder.Register(ctx => RobotSettings.LoadFromFile("settings.json")).SingleInstance();
-
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Console.WriteLine($"Detecting OS: Windows");
                 builder.RegisterType<FakeServoController>().As<IServoController>().SingleInstance();
-
-                builder.RegisterType<WindowsInputMapping>().As<IInputMapping>().SingleInstance();
+                builder.RegisterType<WindowsInputMapping>().As<IPlatformInput>().SingleInstance();
             }
             else
             {
                 Console.WriteLine($"Detecting OS: Linux");
                 builder.RegisterType<LinuxSSC32>().As<IServoController>().SingleInstance();
                 builder.RegisterType<PS4Controller>().AsSelf().SingleInstance();
-                builder.RegisterType<LinuxInputMapping>().As<IInputMapping>().SingleInstance();
+                builder.RegisterType<LinuxInputMapping>().As<IPlatformInput>().SingleInstance();
             }
         }
 

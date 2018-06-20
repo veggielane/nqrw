@@ -13,9 +13,11 @@ using NQRW.Timing;
 using System;
 using NQRW.FiniteStateMachine.Commands;
 
-namespace NQRW
+namespace NQRW.Robotics
 {
-    public class Robot : BaseRobot, IHandle<ButtonEvent>, IHandle<AxisEvent>
+    public class Robot : BaseRobot,
+        IHandle<ButtonEvent>, 
+        IHandle<AxisEvent>
     {
         public Robot(
             IMessageBus bus, 
@@ -23,14 +25,12 @@ namespace NQRW
             IStateMachine stateMachine,
             IServoController servoController, 
             IGaitEngine gaitEngine,
-            IInputMapping inputMapping,
+            IPlatformInput input,
             RobotSettings settings,
             IdleState idleState,
             MovingState movingState,
-            StandingState standingState): base("NQRW")
+            StandingState standingState): base("NQRW", bus, timer, input)
         {
-            Bus = bus;
-            Timer = timer;
             StateMachine = stateMachine;
             ServoController = servoController;
             GaitEngine = gaitEngine;
@@ -38,8 +38,6 @@ namespace NQRW
             StateMachine.AddState(idleState);
             StateMachine.AddState(movingState);
             StateMachine.AddState(standingState);
-
-
             StateMachine.AddTransition<IdleState, StartCommand, StandingState>();
             StateMachine.AddTransition<StandingState, StartCommand, IdleState>();
 
@@ -61,9 +59,7 @@ namespace NQRW
              * 
              *  F Body Height
              */
-
-
-
+             
             Body.Z = settings.Body.StartHeight;
 
             Body.Roll = Angle.FromDegrees(0);
@@ -115,7 +111,7 @@ namespace NQRW
             ServoController.Servos.Add(31, leftFront.CoxaServo);
 
 
-            InputMapping = inputMapping;
+            
         }
 
         public override void Boot()

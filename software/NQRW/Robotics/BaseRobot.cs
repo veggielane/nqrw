@@ -22,7 +22,7 @@ namespace NQRW.Robotics
         public Dictionary<Leg, ILeg> Legs { get; set; } = new Dictionary<Leg, ILeg>();
         public IBody Body { get; set; } = new Body();
 
-        public IInputMapping InputMapping { get; protected set; }
+        public IPlatformInput Input { get; protected set; }
 
         public abstract void Boot();
         public abstract void Dispose();
@@ -39,6 +39,13 @@ namespace NQRW.Robotics
         protected BaseRobot(string name)
         {
             Name = name;
+        }
+        protected BaseRobot(string name, IMessageBus bus, ITimer timer, IPlatformInput input)
+        {
+            Name = name;
+            Bus = bus;
+            Timer = timer;
+            Input = input;
         }
     }
 

@@ -1,13 +1,15 @@
-﻿namespace NQRW.Devices.Input
+﻿using JetBrains.Annotations;
+
+namespace NQRW.Devices.Input
 {
-    public class LinuxInputMapping : BaseInputMapping
+    [UsedImplicitly]
+    public class LinuxInputMapping : IPlatformInput
     {
-
-        private readonly PS4Controller _controller;
-
+        [UsedImplicitly]
+        public readonly PS4Controller Controller;
         public LinuxInputMapping(PS4Controller controller)
         {
-            _controller = controller;
+            Controller = controller;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace NQRW.FiniteStateMachine.States
 {
     public abstract class BaseState : IState
     {
-        public string Name { get; private set; }
+        public string Name { get; }
         public IMessageBus Bus { get; }
 
         public BaseState(string name, IMessageBus bus)

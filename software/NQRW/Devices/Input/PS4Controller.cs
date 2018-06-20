@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Text;
 using NQRW.Messaging;
 using NQRW.Messaging.Messages;
-
+using JetBrains.Annotations;
 namespace NQRW.Devices.Input
 {
-    public partial class PS4Controller
+    [UsedImplicitly]
+    public class PS4Controller:IDisposable
     {
-
         private readonly BackgroundWorker _backgroundWorker;
         private readonly IMessageBus _bus;
 
+        [PublicAPI]
         public Dictionary<PS4Button, ButtonState> Buttons { get; }
-
+        [PublicAPI]
         public Dictionary<PS4Axis, short> Axes { get;}
 
         public PS4Controller(IMessageBus bus)
         {
-            Buttons = new Dictionary<PS4Button, ButtonState>()
+            Buttons = new Dictionary<PS4Button, ButtonState>
             {
                 {PS4Button.X, ButtonState.Released},
                 {PS4Button.Circle, ButtonState.Released},
@@ -50,11 +50,12 @@ namespace NQRW.Devices.Input
             };
             _bus = bus;
 
-            _backgroundWorker = new BackgroundWorker()
+            _backgroundWorker = new BackgroundWorker
             { 
                 WorkerReportsProgress = true,
-                WorkerSupportsCancellation = true
+                WorkerSupportsCancellation = true,
             };
+
             _backgroundWorker.DoWork += BackgroundWorkerOnDoWork;
             _backgroundWorker.ProgressChanged += BackgroundWorkerOnProgressChanged;
             _backgroundWorker.RunWorkerAsync();
@@ -62,8 +63,7 @@ namespace NQRW.Devices.Input
         }
         private void BackgroundWorkerOnProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            byte[] buff = e.UserState as byte[];
-            if (checkBit(buff[6], (byte)EventMode.Value))
+            if (e.UserState is byte[] buff && checkBit(buff[6], (byte)EventMode.Value))
             {
                 if (checkBit(buff[6], (byte)EventType.Button))
                 {
@@ -75,17 +75,16 @@ namespace NQRW.Devices.Input
                 if (checkBit(buff[6], (byte)EventType.Axis))
                 {
                     var axis = (PS4Axis)buff[7];
-                    var value = BitConverter.ToInt16(new byte[2] { buff[4], buff[5] }, 0);
+                    var value = BitConverter.ToInt16(new [] { buff[4], buff[5] }, 0);
                     Axes[axis] = value;
                     _bus.Add(new AxisEvent(this, axis, value));
                 }
             }
-
         }
 
         private void BackgroundWorkerOnDoWork(object sender, DoWorkEventArgs e)
         {
-            BackgroundWorker worker = (BackgroundWorker)sender;
+            var worker = (BackgroundWorker)sender;
             using (var stream = new FileStream("/dev/input/js0", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 byte[] buff = new byte[8];
@@ -99,6 +98,11 @@ namespace NQRW.Devices.Input
         bool checkBit(byte value, byte flag)
         {
             return (byte)(value & flag) == flag;
+        }
+
+        public void Dispose()
+        {
+            _backgroundWorker?.Dispose();
         }
     }
 }

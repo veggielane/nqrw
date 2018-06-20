@@ -1,6 +1,6 @@
 ﻿namespace NQRW.Devices.Input
 {
-    public interface IInputMapping
+    public interface IPlatformInput
     {
     }
 }
