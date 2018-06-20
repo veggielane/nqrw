@@ -5,6 +5,107 @@
     "C": 50.0,
     "D": 55.0,
     "E": 50.0,
-    "F": 90.0
+    "F": 90.0,
+    "StartHeight": 90.0,
+    "FootOffset": 100
+  },
+  "Legs": {
+    "LeftFront": {
+      "CoxaLength": 20.0,
+      "FemurLength": 77.0,
+      "TibiaLength": 73.0,
+      "TarsusLength": 90.0,
+
+      "CoxaOffset": 54.0,
+      "FemurOffset": 12.0,
+      "TibiaOffset": 70.0,
+      "TarsusOffset": 40.0,
+
+      "CoxaInvert": true,
+      "FemurInvert": true,
+      "TibiaInvert": true,
+      "TarsusInvert": true
+
+    },
+    "LeftMiddle": {
+      "CoxaLength": 20.0,
+      "FemurLength": 77.0,
+      "TibiaLength": 73.0,
+      "TarsusLength": 90.0,
+
+      "CoxaOffset": 0.0,
+      "FemurOffset": 12.0,
+      "TibiaOffset": 70.0,
+      "TarsusOffset": 40.0,
+
+      "CoxaInvert": true,
+      "FemurInvert": true,
+      "TibiaInvert": true,
+      "TarsusInvert": true
+    },
+    "LeftRear": {
+      "CoxaLength": 20.0,
+      "FemurLength": 77.0,
+      "TibiaLength": 73.0,
+      "TarsusLength": 90.0,
+
+      "CoxaOffset": -42.0,
+      "FemurOffset": 12.0,
+      "TibiaOffset": 70.0,
+      "TarsusOffset": 30.0,
+
+      "CoxaInvert": true,
+      "FemurInvert": true,
+      "TibiaInvert": true,
+      "TarsusInvert": true
+    },
+    "RightFront": {
+      "CoxaLength": 20.0,
+      "FemurLength": 77.0,
+      "TibiaLength": 73.0,
+      "TarsusLength": 90.0,
+
+      "CoxaOffset": -40.0,
+      "FemurOffset": -12.0,
+      "TibiaOffset": -70.0,
+      "TarsusOffset": -40.0,
+
+      "CoxaInvert": false,
+      "FemurInvert": false,
+      "TibiaInvert": false,
+      "TarsusInvert": false
+    },
+    "RightMiddle": {
+      "CoxaLength": 20.0,
+      "FemurLength": 77.0,
+      "TibiaLength": 73.0,
+      "TarsusLength": 90.0,
+
+      "CoxaOffset": -5.0,
+      "FemurOffset": -12.0,
+      "TibiaOffset": -70.0,
+      "TarsusOffset": -40.0,
+
+      "CoxaInvert": false,
+      "FemurInvert": false,
+      "TibiaInvert": false,
+      "TarsusInvert": false
+    },
+    "RightRear": {
+      "CoxaLength": 20.0,
+      "FemurLength": 77.0,
+      "TibiaLength": 73.0,
+      "TarsusLength": 90.0,
+
+      "CoxaOffset": 44.0,
+      "FemurOffset": -12.0,
+      "TibiaOffset": -70.0,
+      "TarsusOffset": -40.0,
+
+      "CoxaInvert": false,
+      "FemurInvert": false,
+      "TibiaInvert": false,
+      "TarsusInvert": false
+    }
   } 
 }

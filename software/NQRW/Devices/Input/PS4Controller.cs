@@ -1,29 +1,24 @@
-﻿using NQRW.Messaging;
-using NQRW.Messaging.Messages;
-using NQRW.Timing;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using NQRW.Messaging;
+using NQRW.Messaging.Messages;
 
-namespace NQRW.Devices
+namespace NQRW.Devices.Input
 {
-    public class PS4Controller
+    public partial class PS4Controller
     {
-        enum EventType : byte { Axis = 0x02, Button = 0x01 }
-        enum EventMode : byte { Config = 0x80, Value = 0x00 }
 
-
-        private BackgroundWorker _backgroundWorker;
+        private readonly BackgroundWorker _backgroundWorker;
         private readonly IMessageBus _bus;
 
         public Dictionary<PS4Button, ButtonState> Buttons { get; }
 
         public Dictionary<PS4Axis, short> Axes { get;}
 
-        public PS4Controller(ITimer timer, IMessageBus bus)
+        public PS4Controller(IMessageBus bus)
         {
             Buttons = new Dictionary<PS4Button, ButtonState>()
             {
@@ -42,7 +37,7 @@ namespace NQRW.Devices
                 {PS4Button.R3, ButtonState.Released}
             };
 
-            Axes = new Dictionary<PS4Axis, short>()
+            Axes = new Dictionary<PS4Axis, short>
             {
                 {PS4Axis.LeftStickX, 0},
                 {PS4Axis.LeftStickY, 0},
@@ -68,28 +63,6 @@ namespace NQRW.Devices
         private void BackgroundWorkerOnProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             byte[] buff = e.UserState as byte[];
-
-            //if (checkBit(buff[6], (byte)EventMode.Config))
-            //{
-            //    if (checkBit(buff[6], (byte)EventType.Button))
-            //    {
-            //        var button = (PS4Button)buff[7];
-            //        if (!Buttons.ContainsKey(button))
-            //        {
-            //            Console.WriteLine(button);
-            //            Buttons.TryAdd(button, ButtonState.Released);
-            //        }
-            //    }
-            //    if (checkBit(buff[6], (byte)EventType.Axis))
-            //    {
-            //        var axis = (PS4Axis)buff[7];
-            //        if (!Axes.ContainsKey(axis))
-            //        {
-            //            Axes.TryAdd(axis, 0);
-            //        }
-            //    }
-            //}
-
             if (checkBit(buff[6], (byte)EventMode.Value))
             {
                 if (checkBit(buff[6], (byte)EventType.Button))
@@ -123,22 +96,9 @@ namespace NQRW.Devices
                 }
             }
         }
-        public static string ByteArrayToString(byte[] ba)
-        {
-            var hex = new StringBuilder(ba.Length * 2);
-            foreach (byte b in ba)
-            {
-                hex.AppendFormat("{0:x2}", b);
-            }
-            return hex.ToString();
-        }
         bool checkBit(byte value, byte flag)
         {
             return (byte)(value & flag) == flag;
-        }
-        public void Dispose()
-        {
-
         }
     }
 }

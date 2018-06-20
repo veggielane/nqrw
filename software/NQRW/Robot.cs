@@ -17,15 +17,6 @@ namespace NQRW
 {
     public class Robot : BaseRobot, IHandle<ButtonEvent>, IHandle<AxisEvent>
     {
-        private RobotSettingsOld _settings;
-        private Leg4DOF _leftFront;
-        private Leg4DOF _leftMiddle;
-
-        private Leg4DOF _leftRear;
-        private Leg4DOF _rightFront;
-        private Leg4DOF _rightMiddle;
-        private Leg4DOF _rightRear;
-
         public Robot(
             IMessageBus bus, 
             ITimer timer, 
@@ -38,9 +29,6 @@ namespace NQRW
             MovingState movingState,
             StandingState standingState): base("NQRW")
         {
-
-            
-
             Bus = bus;
             Timer = timer;
             StateMachine = stateMachine;
@@ -73,139 +61,58 @@ namespace NQRW
              * 
              *  F Body Height
              */
-            _settings = new RobotSettingsOld
-            {
-                Legs =
-                {
-                    {
-                        Leg.LeftFront, new LegSettings(20, 77, 73, 90)
-                        {
-                            CoxaOffset = Angle.FromDegrees(54.0),
-                            CoxaInvert = true,
-                            FemurOffset = Angle.FromDegrees(12.0),
-                            FemurInvert = true,
-                            TibiaOffset = Angle.FromDegrees(70.0),
-                            TibiaInvert = true,
-                            TarsusOffset = Angle.FromDegrees(40.0),
-                            TarsusInvert = true
-                        }
-                    }
-                }
-            };
-
-            //FemurOffset = Angle.FromDegrees(12.0),
-            //TibiaOffset = Angle.FromDegrees(70.0),
-            //TarsusOffset = Angle.FromDegrees(40.0)
-
-            
-            
-            _settings.Legs[Leg.LeftMiddle].CoxaOffset = Angle.FromDegrees(0.0);
-            _settings.Legs[Leg.LeftMiddle].CoxaInvert = true;
-            _settings.Legs[Leg.LeftMiddle].FemurOffset = Angle.FromDegrees(12.0);
-            _settings.Legs[Leg.LeftMiddle].FemurInvert = true;
-            _settings.Legs[Leg.LeftMiddle].TibiaOffset = Angle.FromDegrees(70.0);
-            _settings.Legs[Leg.LeftMiddle].TibiaInvert = true;
-            _settings.Legs[Leg.LeftMiddle].TarsusOffset = Angle.FromDegrees(40.0);
-            _settings.Legs[Leg.LeftMiddle].TarsusInvert = true;
-
-            _settings.Legs[Leg.LeftRear].CoxaOffset = Angle.FromDegrees(-42.0);
-            _settings.Legs[Leg.LeftRear].CoxaInvert = true;
-            _settings.Legs[Leg.LeftRear].FemurOffset = Angle.FromDegrees(12.0);
-            _settings.Legs[Leg.LeftRear].FemurInvert = true;
-            _settings.Legs[Leg.LeftRear].TibiaOffset = Angle.FromDegrees(70.0);
-            _settings.Legs[Leg.LeftRear].TibiaInvert = true;
-            _settings.Legs[Leg.LeftRear].TarsusOffset = Angle.FromDegrees(30.0);
-            _settings.Legs[Leg.LeftRear].TarsusInvert = true;
-
-            _settings.Legs[Leg.RightFront].CoxaOffset = Angle.FromDegrees(-40);
-            _settings.Legs[Leg.RightFront].CoxaInvert = false;
-            _settings.Legs[Leg.RightFront].FemurOffset = Angle.FromDegrees(-12.0);
-            _settings.Legs[Leg.RightFront].FemurInvert = false;
-            _settings.Legs[Leg.RightFront].TibiaOffset = Angle.FromDegrees(-70.0);
-            _settings.Legs[Leg.RightFront].TibiaInvert = false;
-            _settings.Legs[Leg.RightFront].TarsusOffset = Angle.FromDegrees(-40.0);
-            _settings.Legs[Leg.RightFront].TarsusInvert = false;
-
-            _settings.Legs[Leg.RightMiddle].CoxaOffset = Angle.FromDegrees(-5);
-            _settings.Legs[Leg.RightMiddle].CoxaInvert = false;
-            _settings.Legs[Leg.RightMiddle].FemurOffset = Angle.FromDegrees(-12.0);
-            _settings.Legs[Leg.RightMiddle].FemurInvert = false;
-            _settings.Legs[Leg.RightMiddle].TibiaOffset = Angle.FromDegrees(-70.0);
-            _settings.Legs[Leg.RightMiddle].TibiaInvert = false;
-            _settings.Legs[Leg.RightMiddle].TarsusOffset = Angle.FromDegrees(-40.0);
-            _settings.Legs[Leg.RightMiddle].TarsusInvert = false;
 
 
-            _settings.Legs[Leg.RightRear].CoxaOffset = Angle.FromDegrees(44.0);
-            _settings.Legs[Leg.RightRear].CoxaInvert = false;
-            _settings.Legs[Leg.RightRear].FemurOffset = Angle.FromDegrees(-12.0);
-            _settings.Legs[Leg.RightRear].FemurInvert = false;
-            _settings.Legs[Leg.RightRear].TibiaOffset = Angle.FromDegrees(-70.0);
-            _settings.Legs[Leg.RightRear].TibiaInvert = false;
-            _settings.Legs[Leg.RightRear].TarsusOffset = Angle.FromDegrees(-40.0);
-            _settings.Legs[Leg.RightRear].TarsusInvert = false;
 
-            var A = 97.5;
-            var B = 97.5;
-            var C = 50.0;
-            var D = 55.0;
-            var E = 50.0;
-            var F = 90.0;
-
-            var footPosition = 100;
-
-            Body.Z = F;
+            Body.Z = settings.Body.StartHeight;
 
             Body.Roll = Angle.FromDegrees(0);
             Body.Pitch = Angle.FromDegrees(0);
             Body.Yaw = Angle.FromDegrees(0);
 
-            _leftFront = new Leg4DOF(Matrix4.Translate(-C, A, 0), new Vector3(-C, A, 0) - new Vector3(footPosition, 0, 0), _settings.Legs[Leg.LeftFront]);
-            _leftMiddle = new Leg4DOF(Matrix4.Translate(-D, 0, 0), new Vector3(-D, 0, 0) - new Vector3(footPosition, 0, 0), _settings.Legs[Leg.LeftMiddle]);
-            _leftRear = new Leg4DOF(Matrix4.Translate(-E, -B, 0), new Vector3(-E, -B, 0) - new Vector3(footPosition, 0, 0), _settings.Legs[Leg.LeftRear]);
-            _rightFront = new Leg4DOF(Matrix4.Translate(C, A, 0), new Vector3(C, A, 0) + new Vector3(footPosition, 0, 0), _settings.Legs[Leg.RightFront]);
-            _rightMiddle = new Leg4DOF(Matrix4.Translate(D, 0, 0), new Vector3(D, 0, 0) + new Vector3(footPosition, 0, 0), _settings.Legs[Leg.RightMiddle]);
-            _rightRear = new Leg4DOF(Matrix4.Translate(E, -B, 0), new Vector3(E, -B, 0) + new Vector3(footPosition, 0, 0), _settings.Legs[Leg.RightRear]);
+            var leftFront = new Leg4DOF(Matrix4.Translate(-settings.Body.C, settings.Body.A, 0), new Vector3(-settings.Body.C, settings.Body.A, 0) - new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.LeftFront]);
+            var leftMiddle = new Leg4DOF(Matrix4.Translate(-settings.Body.D, 0, 0), new Vector3(-settings.Body.D, 0, 0) - new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.LeftMiddle]);
+            var leftRear = new Leg4DOF(Matrix4.Translate(-settings.Body.E, -settings.Body.B, 0), new Vector3(-settings.Body.E, -settings.Body.B, 0) - new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.LeftRear]);
+            var rightFront = new Leg4DOF(Matrix4.Translate(settings.Body.C, settings.Body.A, 0), new Vector3(settings.Body.C, settings.Body.A, 0) + new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.RightFront]);
+            var rightMiddle = new Leg4DOF(Matrix4.Translate(settings.Body.D, 0, 0), new Vector3(settings.Body.D, 0, 0) + new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.RightMiddle]);
+            var rightRear = new Leg4DOF(Matrix4.Translate(settings.Body.E, -settings.Body.B, 0), new Vector3(settings.Body.E, -settings.Body.B, 0) + new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.RightRear]);
 
-            Legs.Add(Leg.LeftFront, _leftFront);
-            Legs.Add(Leg.LeftMiddle, _leftMiddle);
-            Legs.Add(Leg.LeftRear, _leftRear);
-            Legs.Add(Leg.RightFront, _rightFront);
-            Legs.Add(Leg.RightMiddle, _rightMiddle);
-            Legs.Add(Leg.RightRear, _rightRear);
+            Legs.Add(Leg.LeftFront, leftFront);
+            Legs.Add(Leg.LeftMiddle, leftMiddle);
+            Legs.Add(Leg.LeftRear, leftRear);
+            Legs.Add(Leg.RightFront, rightFront);
+            Legs.Add(Leg.RightMiddle, rightMiddle);
+            Legs.Add(Leg.RightRear, rightRear);
 
+            ServoController.Servos.Add(0, rightRear.TarsusServo);
+            ServoController.Servos.Add(1, rightRear.TibiaServo);
+            ServoController.Servos.Add(2, rightRear.FemurServo);
+            ServoController.Servos.Add(3, rightRear.CoxaServo);
 
+            ServoController.Servos.Add(4, rightMiddle.TarsusServo);
+            ServoController.Servos.Add(5, rightMiddle.TibiaServo);
+            ServoController.Servos.Add(6, rightMiddle.FemurServo);
+            ServoController.Servos.Add(7, rightMiddle.CoxaServo);
 
-            ServoController.Servos.Add(0, _rightRear.TarsusServo);
-            ServoController.Servos.Add(1, _rightRear.TibiaServo);
-            ServoController.Servos.Add(2, _rightRear.FemurServo);
-            ServoController.Servos.Add(3, _rightRear.CoxaServo);
+            ServoController.Servos.Add(12, rightFront.TarsusServo);
+            ServoController.Servos.Add(13, rightFront.TibiaServo);
+            ServoController.Servos.Add(14, rightFront.FemurServo);
+            ServoController.Servos.Add(15, rightFront.CoxaServo);
 
-            ServoController.Servos.Add(4, _rightMiddle.TarsusServo);
-            ServoController.Servos.Add(5, _rightMiddle.TibiaServo);
-            ServoController.Servos.Add(6, _rightMiddle.FemurServo);
-            ServoController.Servos.Add(7, _rightMiddle.CoxaServo);
+            ServoController.Servos.Add(16, leftRear.TarsusServo);
+            ServoController.Servos.Add(17, leftRear.TibiaServo);
+            ServoController.Servos.Add(18, leftRear.FemurServo);
+            ServoController.Servos.Add(19, leftRear.CoxaServo);
 
-            ServoController.Servos.Add(12, _rightFront.TarsusServo);
-            ServoController.Servos.Add(13, _rightFront.TibiaServo);
-            ServoController.Servos.Add(14, _rightFront.FemurServo);
-            ServoController.Servos.Add(15, _rightFront.CoxaServo);
+            ServoController.Servos.Add(20, leftMiddle.TarsusServo);
+            ServoController.Servos.Add(21, leftMiddle.TibiaServo);
+            ServoController.Servos.Add(22, leftMiddle.FemurServo);
+            ServoController.Servos.Add(23, leftMiddle.CoxaServo);
 
-
-            ServoController.Servos.Add(16, _leftRear.TarsusServo);
-            ServoController.Servos.Add(17, _leftRear.TibiaServo);
-            ServoController.Servos.Add(18, _leftRear.FemurServo);
-            ServoController.Servos.Add(19, _leftRear.CoxaServo);
-
-            ServoController.Servos.Add(20, _leftMiddle.TarsusServo);
-            ServoController.Servos.Add(21, _leftMiddle.TibiaServo);
-            ServoController.Servos.Add(22, _leftMiddle.FemurServo);
-            ServoController.Servos.Add(23, _leftMiddle.CoxaServo);
-
-            ServoController.Servos.Add(28, _leftFront.TarsusServo);
-            ServoController.Servos.Add(29, _leftFront.TibiaServo);
-            ServoController.Servos.Add(30, _leftFront.FemurServo);
-            ServoController.Servos.Add(31, _leftFront.CoxaServo);
+            ServoController.Servos.Add(28, leftFront.TarsusServo);
+            ServoController.Servos.Add(29, leftFront.TibiaServo);
+            ServoController.Servos.Add(30, leftFront.FemurServo);
+            ServoController.Servos.Add(31, leftFront.CoxaServo);
 
 
             InputMapping = inputMapping;

@@ -44,7 +44,7 @@ namespace NQRW
 
             builder.RegisterType<GaitEngine>().As<IGaitEngine>().SingleInstance();
 
-            builder.Register<RobotSettings>(ctx => RobotSettings.LoadFromFile("settings.json")).SingleInstance();
+            builder.Register(ctx => RobotSettings.LoadFromFile("settings.json")).SingleInstance();
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {

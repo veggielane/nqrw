@@ -1,4 +1,5 @@
 ﻿using NQRW.Devices;
+using NQRW.Devices.Input;
 
 namespace NQRW.Messaging.Messages
 {

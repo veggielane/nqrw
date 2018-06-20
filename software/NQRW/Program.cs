@@ -1,5 +1,4 @@
-﻿using NQRW.FiniteStateMachine;
-using NQRW.Maths;
+﻿using NQRW.Maths;
 using NQRW.Messaging.Messages;
 using NQRW.Robotics;
 using System;
@@ -10,7 +9,7 @@ namespace NQRW
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             using (var robot = RobotModule.Build<IRobot>())
             {
