@@ -1,11 +1,21 @@
-﻿using NQRW.Messaging;
+﻿using NQRW.Devices;
+using NQRW.Messaging;
 
 namespace NQRW.FiniteStateMachine.States
 {
     public class IdleState : BaseState
     {
-        public IdleState(IMessageBus bus) : base("Idle", bus)
+        private readonly IServoController _servoController;
+
+        public IdleState(IMessageBus bus, IServoController servoController) : base("Idle", bus)
         {
+            _servoController = servoController;
+        }
+
+        public override void Start()
+        {
+            base.Start();
+            _servoController.Stop();
         }
     }
 }

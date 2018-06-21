@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using JetBrains.Annotations;
 
 namespace NQRW.Timing
 {
+    [UsedImplicitly]
     public class Timer : ITimer
     {
         public IObservable<ITick> Ticks { get; private set; }
@@ -18,7 +20,7 @@ namespace NQRW.Timing
         public Timer()
         {
             _subject = new Subject<ITick>();
-            Delta = TimeSpan.FromMilliseconds(1);
+            Delta = TimeSpan.FromMilliseconds(0.5);
             _timer = Observable.Interval(Delta);
             Ticks = _subject.AsObservable();
             LastTickTime = new Tick();
@@ -34,9 +36,6 @@ namespace NQRW.Timing
             });
         }
 
-        public void Stop()
-        {
-            if (_sub != null) _sub.Dispose();
-        }
+        public void Stop() => _sub?.Dispose();
     }
 }

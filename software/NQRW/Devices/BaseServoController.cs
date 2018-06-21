@@ -4,6 +4,7 @@ namespace NQRW.Devices
 {
     public abstract class BaseServoController : IServoController
     {
+        public bool Active { get; protected set; }
         public IDictionary<int, IServo> Servos { get; } = new Dictionary<int, IServo>();
         public string Name { get; }
         public bool Connected { get; protected set; }
@@ -12,6 +13,11 @@ namespace NQRW.Devices
             Name = name;
         }
         public abstract void Connect();
+        public void Start()
+        {
+            Active = true;
+        }
+
         public abstract void Disconnect();
         public abstract void Stop();
         public abstract void Update();

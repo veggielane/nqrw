@@ -17,5 +17,15 @@ namespace NQRW.Kinematics
         public double Y { get; set; } = 0;
 
         public double Z { get; set; } = 0;
+
+        public void Reset(double z)
+        {
+            X = 0;
+            Y = 0;
+            Z = z;
+            Roll = 0;
+            Pitch = 0;
+            Yaw = 0;
+        }
     }
 }

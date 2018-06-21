@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using NQRW.FiniteStateMachine.Commands;
+using NQRW.FiniteStateMachine.States;
 
 namespace NQRW.FiniteStateMachine
 {
@@ -11,13 +12,14 @@ namespace NQRW.FiniteStateMachine
     {
         public IMessageBus Bus { get; private set; }
         public IState Current { get; private set; }
-        private readonly IList<IState> _states = new List<IState>();
+        private readonly List<IState> _states = new List<IState>();
         private readonly IDictionary<Type, IDictionary<Type, Type>> _transitions = new Dictionary<Type, IDictionary<Type, Type>>();//<IState, IDictionary<IStateCommand,IState>
 
-        public StateMachine(IMessageBus bus)
+        public StateMachine(IMessageBus bus, IEnumerable<IState> states)
         {
             Bus = bus;
             Bus.Messages.OfType<IStateCommand>().Subscribe(Next);
+            _states.AddRange(states);
         }
 
         public void AddState(IState state)

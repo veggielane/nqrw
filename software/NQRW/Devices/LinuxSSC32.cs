@@ -24,7 +24,17 @@ namespace NQRW.Devices
         {
             if (Connected) _port.Close();
         }
-        public override void Stop() => _port.Write("STOP" + Convert.ToChar(13).ToString(CultureInfo.InvariantCulture));
+        public override void Stop()
+        {
+            foreach (var kvp in Servos)
+            {
+                Write(new[] { (byte)(0x80 + kvp.Key), (byte)((0 >> 8) & 0xff), (byte)(0 & 0xff) });
+                _port.Write(Convert.ToChar(13).ToString(CultureInfo.InvariantCulture));
+            }
+            //_port.Write("STOP" + Convert.ToChar(13).ToString(CultureInfo.InvariantCulture));
+            Active = false;
+        }
+
         private void Write(byte[] bytes) => _port.Write(bytes, 0, bytes.Length);
         public override void Update()
         {

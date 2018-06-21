@@ -20,7 +20,7 @@ namespace NQRW.Robotics
         public IServoController ServoController { get; protected set; }
 
         public Dictionary<Leg, ILeg> Legs { get; set; } = new Dictionary<Leg, ILeg>();
-        public IBody Body { get; set; } = new Body();
+        public IBody Body { get; set; }
 
         public IPlatformInput Input { get; protected set; }
 
@@ -40,12 +40,13 @@ namespace NQRW.Robotics
         {
             Name = name;
         }
-        protected BaseRobot(string name, IMessageBus bus, ITimer timer, IPlatformInput input)
+        protected BaseRobot(string name, IMessageBus bus, ITimer timer, IPlatformInput input, Body body)
         {
             Name = name;
             Bus = bus;
             Timer = timer;
             Input = input;
+            Body = body;
         }
     }
 

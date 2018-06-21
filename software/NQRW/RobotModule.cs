@@ -9,8 +9,11 @@ using NQRW.Messaging;
 using NQRW.Robotics;
 using NQRW.Timing;
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using NQRW.Kinematics;
 using NQRW.Settings;
+using Module = Autofac.Module;
 
 namespace NQRW
 {
@@ -29,12 +32,12 @@ namespace NQRW
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<Robot>().As<IRobot>().SingleInstance();
+            builder.RegisterType<Body>().AsSelf().SingleInstance();
             builder.RegisterType<MessageBus>().As<IMessageBus>().SingleInstance();
             builder.RegisterType<Timer>().As<ITimer>().SingleInstance();
             builder.RegisterType<StateMachine>().As<IStateMachine>().SingleInstance();
-            builder.RegisterType<MovingState>().AsSelf().SingleInstance();
-            builder.RegisterType<IdleState>().AsSelf().SingleInstance();
-            builder.RegisterType<StandingState>().AsSelf().SingleInstance();
+
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(t => typeof(IState).IsAssignableFrom(t)).AsImplementedInterfaces();
             builder.RegisterType<GaitEngine>().As<IGaitEngine>().SingleInstance();
             builder.Register(ctx => RobotSettings.LoadFromFile("settings.json")).SingleInstance();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

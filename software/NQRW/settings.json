@@ -52,7 +52,7 @@
       "CoxaOffset": -42.0,
       "FemurOffset": 12.0,
       "TibiaOffset": 70.0,
-      "TarsusOffset": 30.0,
+      "TarsusOffset": 10.0,
 
       "CoxaInvert": true,
       "FemurInvert": true,
@@ -100,12 +100,12 @@
       "CoxaOffset": 44.0,
       "FemurOffset": -12.0,
       "TibiaOffset": -70.0,
-      "TarsusOffset": -40.0,
+      "TarsusOffset": -20.0,
 
       "CoxaInvert": false,
       "FemurInvert": false,
       "TibiaInvert": false,
       "TarsusInvert": false
     }
-  } 
+  }
 }

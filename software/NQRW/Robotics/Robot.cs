@@ -27,19 +27,19 @@ namespace NQRW.Robotics
             IGaitEngine gaitEngine,
             IPlatformInput input,
             RobotSettings settings,
-            IdleState idleState,
-            MovingState movingState,
-            StandingState standingState): base("NQRW", bus, timer, input)
+            Body body
+            ): base("NQRW", bus, timer, input, body)
         {
             StateMachine = stateMachine;
             ServoController = servoController;
             GaitEngine = gaitEngine;
 
-            StateMachine.AddState(idleState);
-            StateMachine.AddState(movingState);
-            StateMachine.AddState(standingState);
+
             StateMachine.AddTransition<IdleState, StartCommand, StandingState>();
             StateMachine.AddTransition<StandingState, StartCommand, IdleState>();
+
+            StateMachine.AddTransition<StandingState, BodyMoveCommand, BodyMoveState>();
+            StateMachine.AddTransition<BodyMoveState, BodyMoveCommand, StandingState>();
 
             //StateMachine.AddTransition<StandingState, MoveCommand, MovingState>();
             //StateMachine.AddTransition<MovingState, MoveCommand, StandingState>();
@@ -59,7 +59,7 @@ namespace NQRW.Robotics
              * 
              *  F Body Height
              */
-             
+
             Body.Z = settings.Body.StartHeight;
 
             Body.Roll = Angle.FromDegrees(0);
@@ -136,11 +136,9 @@ namespace NQRW.Robotics
                 //        Legs[kvp.Key].FootOffset = kvp.Value;
                 //    }
                 //}
-                
-                //Console.WriteLine($"kin");
+
                 InverseKinematics();
-                //Bus.Debug(Legs[Leg.LeftMiddle].ToString());
-                ServoController.Update();
+                if(ServoController.Active) ServoController.Update();
             });
 
 
@@ -161,27 +159,10 @@ namespace NQRW.Robotics
             {
                 Bus.Add(new StartCommand());
             }
-            if (message.Is(PS4Button.L1, ButtonState.Released))
-            {
-                Body.Z -= 5.0;
-            }
-            if (message.Is(PS4Button.R1, ButtonState.Released))
-            {
-                Body.Z += 5.0;
-            }
-
         }
 
         public void Handle(AxisEvent e)
         {
-            if(e.Axis == PS4Axis.LeftStickX)
-            {
-                Body.X = MathsHelper.Map(e.Value, -32767, 32767, -15, 15);
-            }
-            if (e.Axis == PS4Axis.LeftStickY)
-            {
-                Body.Y = MathsHelper.Map(e.Value, -32767, 32767, -15, 15);
-            }
 
             if (e.Axis == PS4Axis.RightStickX || e.Axis == PS4Axis.RightStickY)
             {

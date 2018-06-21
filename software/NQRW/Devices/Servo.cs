@@ -35,10 +35,11 @@ namespace NQRW.Devices
         }
         public Servo(Angle angle, Angle offset, Angle min, Angle max)
         {
-            Angle = angle;
-            Offset = offset;
             Min = min;
             Max = max;
+            Angle = angle;
+            Offset = offset;
+
         }
     }
 }
