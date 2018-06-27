@@ -7,14 +7,15 @@ using NQRW.Kinematics;
 using NQRW.Maths;
 using NQRW.Messaging;
 using NQRW.Messaging.Messages;
-using NQRW.Robotics;
 using NQRW.Settings;
 using NQRW.Timing;
 using System;
+using JetBrains.Annotations;
 using NQRW.FiniteStateMachine.Commands;
 
 namespace NQRW.Robotics
 {
+    [UsedImplicitly]
     public class Robot : BaseRobot,
         IHandle<ButtonEvent>, 
         IHandle<AxisEvent>
@@ -41,8 +42,10 @@ namespace NQRW.Robotics
             StateMachine.AddTransition<StandingState, BodyMoveCommand, BodyMoveState>();
             StateMachine.AddTransition<BodyMoveState, BodyMoveCommand, StandingState>();
 
-            //StateMachine.AddTransition<StandingState, MoveCommand, MovingState>();
-            //StateMachine.AddTransition<MovingState, MoveCommand, StandingState>();
+
+
+            StateMachine.AddTransition<StandingState, MoveCommand, MovingState>();
+            StateMachine.AddTransition<MovingState, StopCommand, StandingState>();
 
             /*
              *          ^
@@ -128,20 +131,16 @@ namespace NQRW.Robotics
                 return;
             }
 
-            Timer.Ticks.Subscribe(t => {
-                //if (GaitEngine.Moving)
-                //{
-                //    foreach (var kvp in GaitEngine.Update())
-                //    {
-                //        Legs[kvp.Key].FootOffset = kvp.Value;
-                //    }
-                //}
-
+            Timer.Ticks.Subscribe(t =>
+            {
+                GaitEngine.Update();
+                foreach (var kvp in GaitEngine.Offsets)
+                {
+                    Legs[kvp.Key].FootOffset = kvp.Value;
+                }
                 InverseKinematics();
                 if(ServoController.Active) ServoController.Update();
             });
-
-
             Timer.Start();
             Bus.System("Timer Started");
             Bus.System($"{Name} Started");

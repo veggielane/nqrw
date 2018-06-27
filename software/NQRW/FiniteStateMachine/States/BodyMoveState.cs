@@ -6,7 +6,6 @@ using NQRW.Kinematics;
 using NQRW.Maths;
 using NQRW.Messaging;
 using NQRW.Messaging.Messages;
-using NQRW.Robotics;
 using NQRW.Settings;
 
 namespace NQRW.FiniteStateMachine.States

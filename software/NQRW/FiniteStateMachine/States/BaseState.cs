@@ -9,29 +9,28 @@ namespace NQRW.FiniteStateMachine.States
         public string Name { get; }
         public IMessageBus Bus { get; }
 
-        protected List<IDisposable> Subscriptions;
+        private readonly List<IDisposable> _subscriptions = new List<IDisposable>();
 
         public BaseState(string name, IMessageBus bus)
         {
             Name = name;
             Bus = bus;
-            Subscriptions = new List<IDisposable>();
         }
 
         protected void Sub(IDisposable sub)
         {
-            Subscriptions.Add(sub);
+            _subscriptions.Add(sub);
         }
 
         public virtual void Start()
         {
-            Bus.System("Starting State: " + Name);
+            Bus.System(">>> State: " + Name);
         }
 
         public virtual void Stop()
         {
-            Bus.System("Stopping State: " + Name);
-            foreach (var sub in Subscriptions)
+            Bus.System("<<< State: " + Name);
+            foreach (var sub in _subscriptions)
             {
                 sub?.Dispose();
             }

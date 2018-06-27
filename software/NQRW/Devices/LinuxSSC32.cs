@@ -1,8 +1,6 @@
 ﻿using RJCP.IO.Ports;
 using System;
 using System.Globalization;
-using System.Text;
-using System.Threading;
 using JetBrains.Annotations;
 
 namespace NQRW.Devices

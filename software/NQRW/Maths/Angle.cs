@@ -8,7 +8,7 @@ namespace NQRW.Maths
         public static readonly Angle PI = FromRadians(Math.PI);
         public static readonly Angle TwoPI = FromRadians(Math.PI * 2);
 
-        public readonly double Radians;
+        public double Radians { get; }
         public double Degrees => Radians * 180.0 / Math.PI;
         public double Gradians => Radians * 50 / Math.PI;
 

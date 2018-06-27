@@ -93,7 +93,9 @@ namespace NQRW.Tests
             Legs.Add(Leg.LeftRear, lr);
             Legs.Add(Leg.RightFront, rf);
             Legs.Add(Leg.RightMiddle, rm);
+
             Legs.Add(Leg.RightRear, rr);
+            Body = new Body();
         }
 
         public override void Boot()

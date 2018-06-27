@@ -7,8 +7,11 @@ namespace NQRW.Gait
     public interface IGaitEngine
     {
         Vector2 Heading { get; set; }
+        IDictionary<Leg, Vector3> Offsets { get; }
 
-        bool Moving { get; set; }
-        Dictionary<Leg, Vector3> Update();
+        bool Moving { get; }
+        void Update();
+        void Start();
+        void Stop();
     }
 }

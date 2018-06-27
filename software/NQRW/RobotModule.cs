@@ -3,7 +3,6 @@ using Autofac.Core;
 using NQRW.Devices;
 using NQRW.Devices.Input;
 using NQRW.FiniteStateMachine;
-using NQRW.FiniteStateMachine.States;
 using NQRW.Gait;
 using NQRW.Messaging;
 using NQRW.Robotics;

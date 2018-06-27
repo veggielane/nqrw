@@ -21,6 +21,15 @@ namespace NQRW.FiniteStateMachine.States
             base.Start();
             _servoController.Start();
             Sub(Bus.Messages.OfType<ButtonEvent>().Subscribe(OnNext));
+            Sub(Bus.Messages.OfType<HeadingEvent>().Subscribe(OnNext));
+        }
+
+        private void OnNext(HeadingEvent e)
+        {
+            if (e.Heading.Length > 0.1)
+            {
+                Bus.Add(new MoveCommand());
+            }
         }
 
         private void OnNext(ButtonEvent e)
@@ -29,21 +38,6 @@ namespace NQRW.FiniteStateMachine.States
             {
                 Bus.Add(new BodyMoveCommand());
             }
-        }
-
-        private void Check(HeadingEvent e)
-        {
-            if (e.Heading.Length > 0.1)
-            {
-                
-                Bus.Add(new MoveCommand());
-            }
-
-        }
-
-        public override void Stop()
-        {
-            base.Stop();
         }
     }
 }
