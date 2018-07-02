@@ -69,12 +69,12 @@ namespace NQRW.Robotics
             Body.Pitch = Angle.FromDegrees(0);
             Body.Yaw = Angle.FromDegrees(0);
 
-            var leftFront = new Leg4DOF(Matrix4.Translate(-settings.Body.C, settings.Body.A, 0), new Vector3(-settings.Body.C, settings.Body.A, 0) - new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.LeftFront]);
-            var leftMiddle = new Leg4DOF(Matrix4.Translate(-settings.Body.D, 0, 0), new Vector3(-settings.Body.D, 0, 0) - new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.LeftMiddle]);
-            var leftRear = new Leg4DOF(Matrix4.Translate(-settings.Body.E, -settings.Body.B, 0), new Vector3(-settings.Body.E, -settings.Body.B, 0) - new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.LeftRear]);
-            var rightFront = new Leg4DOF(Matrix4.Translate(settings.Body.C, settings.Body.A, 0), new Vector3(settings.Body.C, settings.Body.A, 0) + new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.RightFront]);
-            var rightMiddle = new Leg4DOF(Matrix4.Translate(settings.Body.D, 0, 0), new Vector3(settings.Body.D, 0, 0) + new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.RightMiddle]);
-            var rightRear = new Leg4DOF(Matrix4.Translate(settings.Body.E, -settings.Body.B, 0), new Vector3(settings.Body.E, -settings.Body.B, 0) + new Vector3(settings.Body.FootOffset, 0, 0), settings.Legs[Leg.RightRear]);
+            var leftFront = new Leg4DOF(Matrix4.Translate(-settings.Body.C, settings.Body.A, 0), new Vector3(-settings.Body.C, settings.Body.A, 0) - new Vector3(settings.Body.FootOffsetX, settings.Body.FootOffsetY, 0), settings.Legs[Leg.LeftFront]);
+            var leftMiddle = new Leg4DOF(Matrix4.Translate(-settings.Body.D, 0, 0), new Vector3(-settings.Body.D, 0, 0) - new Vector3(settings.Body.FootOffsetX, 0, 0), settings.Legs[Leg.LeftMiddle]);
+            var leftRear = new Leg4DOF(Matrix4.Translate(-settings.Body.E, -settings.Body.B, 0), new Vector3(-settings.Body.E, -settings.Body.B, 0) - new Vector3(settings.Body.FootOffsetX, -settings.Body.FootOffsetY, 0), settings.Legs[Leg.LeftRear]);
+            var rightFront = new Leg4DOF(Matrix4.Translate(settings.Body.C, settings.Body.A, 0), new Vector3(settings.Body.C, settings.Body.A, 0) + new Vector3(settings.Body.FootOffsetX, -settings.Body.FootOffsetY, 0), settings.Legs[Leg.RightFront]);
+            var rightMiddle = new Leg4DOF(Matrix4.Translate(settings.Body.D, 0, 0), new Vector3(settings.Body.D, 0, 0) + new Vector3(settings.Body.FootOffsetX, 0, 0), settings.Legs[Leg.RightMiddle]);
+            var rightRear = new Leg4DOF(Matrix4.Translate(settings.Body.E, -settings.Body.B, 0), new Vector3(settings.Body.E, -settings.Body.B, 0) + new Vector3(settings.Body.FootOffsetX, settings.Body.FootOffsetY, 0), settings.Legs[Leg.RightRear]);
 
             Legs.Add(Leg.LeftFront, leftFront);
             Legs.Add(Leg.LeftMiddle, leftMiddle);
@@ -165,8 +165,8 @@ namespace NQRW.Robotics
 
             if (e.Axis == PS4Axis.RightStickX || e.Axis == PS4Axis.RightStickY)
             {
-                var x = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickX], -32767, 32767, -1.0, 1.0);
-                var y = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickY], -32767, 32767, -1.0, 1.0);
+                var x = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickX], -32767, 32767, -30.0, 30.0);
+                var y = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickY], -32767, 32767, -30.0, 30.0);
                 Bus.Add(new HeadingEvent(new Vector2(x, y)));
             }
         }

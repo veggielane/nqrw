@@ -20,6 +20,8 @@ namespace NQRW.Settings
         [DataMember]
         public double StartHeight { get; set; }
         [DataMember]
-        public double FootOffset { get; set; }
+        public double FootOffsetX { get; set; }
+        [DataMember]
+        public double FootOffsetY { get; set; }
     }
 }

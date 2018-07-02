@@ -7,7 +7,8 @@
     "E": 50.0,
     "F": 90.0,
     "StartHeight": 90.0,
-    "FootOffset": 100
+    "FootOffsetX": 100,
+    "FootOffsetY": 50
   },
   "Legs": {
     "LeftFront": {

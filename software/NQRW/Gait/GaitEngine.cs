@@ -24,15 +24,7 @@ namespace NQRW.Gait
 
         public Vector2 Heading { get; set; } = Vector2.Zero;
 
-        public IList<Vector3> Positions => new List<Vector3>
-        {
-            Vector3.Zero,
-            new Vector3(-Heading / 2.0, 0),
-            new Vector3(-Heading / 2.0, StrideHeight/2.0),
-            new Vector3(0,0, StrideHeight),
-            new Vector3(Heading / 2.0, 0),
-            new Vector3(Heading / 2.0, StrideHeight / 2.0)
-        };
+
 
         public IDictionary<Leg, Vector3> Offsets { get; private set; } = new Dictionary<Leg, Vector3>
         {
@@ -49,25 +41,50 @@ namespace NQRW.Gait
 
         public bool Moving { get; private set; }
 
+        public IList<Vector3> Positions => new List<Vector3>
+        {
+            Vector3.Zero,
+            new Vector3(-Heading / 2.0, 0),
+            new Vector3(-Heading / 2.0, StrideHeight/2.0),
+            new Vector3(0,0, StrideHeight),
+            new Vector3(Heading / 2.0, 0),
+            new Vector3(Heading / 2.0, StrideHeight / 2.0)
+        };
+
         public GaitEngine(IMessageBus bus)
         {
             _bus = bus;
-            StrideHeight = 20.0;
+            StrideHeight = 80.0;
             StrideLength = 20.0;
 
             StepCount = 8;
-            MicroSteps = 20;
+            MicroSteps = 15;
+
+
+
+            var groupA = new[] {3, 5, 4, 4, 0, 1, 1, 2};
+            var groupB = new[] {0, 1, 1, 2, 3, 5, 4, 4};
 
 
             Steps = new Dictionary<Leg, int[]>
             {
-                {Leg.LeftFront, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
-                {Leg.LeftMiddle, new[]{ 3, 4, 5, 5, 0, 1, 1, 2 }},
-                {Leg.LeftRear, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
-                {Leg.RightFront, new[]{3, 4, 5, 5, 0, 1, 1, 2 }},
-                {Leg.RightMiddle, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
-                {Leg.RightRear, new[]{3, 4, 5, 5, 0, 1, 1, 2 }},
+                {Leg.LeftFront, groupA},
+                {Leg.LeftMiddle, groupB},
+                {Leg.LeftRear, groupA},
+                {Leg.RightFront, groupB},
+                {Leg.RightMiddle, groupA},
+                {Leg.RightRear, groupB},
             };
+
+            //Steps = new Dictionary<Leg, int[]>
+            //{
+            //    {Leg.LeftFront, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
+            //    {Leg.LeftMiddle, new[]{ 3, 4, 5, 5, 0, 1, 1, 2 }},
+            //    {Leg.LeftRear, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
+            //    {Leg.RightFront, new[]{3, 4, 5, 5, 0, 1, 1, 2 }},
+            //    {Leg.RightMiddle, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
+            //    {Leg.RightRear, new[]{3, 4, 5, 5, 0, 1, 1, 2 }},
+            //};
             Stop();
         }
 
@@ -107,14 +124,11 @@ namespace NQRW.Gait
                         return new KeyValuePair<Leg, Vector3>(pair.Key, new Vector3(0, 0, StrideHeight));
                     }).ToDictionary(p => p.Key,p => p.Value);
                 }
-                else if(numLegsOnFloor == 0)
+                else if(numLegsOnFloor == 3)
                 {
-
+                    Offsets = Offsets.Select(pair => new KeyValuePair<Leg, Vector3>(pair.Key, Vector3.Zero)).ToDictionary(p => p.Key, p => p.Value);
                 }
             }
-
-
-
         }
 
         public void Start()
