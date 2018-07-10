@@ -4,6 +4,11 @@ namespace NQRW.Maths
 {
     public static class MathsHelper
     {
+        public static Vector3 ToVector3(this Vector2 v, double z)
+        {
+            return new Vector3(v, z);
+        }
+
         public static Vector2 ToVector2(this Vector3 v)
         {
             return new Vector2(v.X, v.Y);
@@ -12,6 +17,12 @@ namespace NQRW.Maths
         {
             return new Vector3(m.X, m.Y, m.Z);
         }
+
+        public static Vector2 Rotate(this Vector2 v, Angle a)
+        {
+            return new Vector2(v.X * a.Cos() - v.Y * a.Sin(), v.X * a.Sin() + v.Y * a.Cos());
+        }
+        
         public static Matrix4 ToMatrix4(this Vector3 v)
         {
             return Matrix4.Translate(v);

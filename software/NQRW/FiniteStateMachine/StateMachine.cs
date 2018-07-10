@@ -11,6 +11,7 @@ namespace NQRW.FiniteStateMachine
     [UsedImplicitly]
     public class StateMachine : IStateMachine
     {
+        private object _lock = new object();
         public IState Current { get; private set; }
         private readonly List<IState> _states = new List<IState>();
         private readonly IDictionary<Type, IDictionary<Type, Type>> _transitions = new Dictionary<Type, IDictionary<Type, Type>>();
@@ -53,16 +54,19 @@ namespace NQRW.FiniteStateMachine
 
         private void Next(Type command)
         {
-            if (_transitions.ContainsKey(Current.GetType()) && _transitions[Current.GetType()].ContainsKey(command))
+            lock (_lock)
             {
-                var state = _states.SingleOrDefault(s => s.GetType() == _transitions[Current.GetType()][command]);
-                if (state != null)
+                if (_transitions.ContainsKey(Current.GetType()) && _transitions[Current.GetType()].ContainsKey(command))
                 {
-                    Current.Stop();
-                    Current = state;
-                    Current.Start();
+                    var state = _states.SingleOrDefault(s => s.GetType() == _transitions[Current.GetType()][command]);
+                    if (state != null)
+                    {
+                        Current.Stop();
+                        Current = state;
+                        Current.Start();
+                    }
+                    else throw new Exception("State Does not exist");
                 }
-                else throw new Exception("State Does not exist");
             }
         }
     }

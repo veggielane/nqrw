@@ -1,17 +1,9 @@
-﻿using System;
-
-namespace NQRW.Messaging.Messages
+﻿namespace NQRW.Messaging.Messages
 {
-    public class DebugMessage : BaseMessage
+    public class DebugMessage : SystemMessage
     {
-        public string Message { get; private set; }
-        public DebugMessage(String message)
+        public DebugMessage(string message) : base(message)
         {
-            Message = message;
-        }
-        public override string ToString()
-        {
-            return $"{Timestamp}: {Message}";
         }
     }
 }

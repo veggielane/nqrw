@@ -15,7 +15,7 @@ namespace NQRW.FiniteStateMachine.States
         private double delta = 25.0;
         private readonly Body _body;
         private readonly RobotSettings _setting;
-        private IDisposable _sub;
+
         public BodyMoveState(IMessageBus bus, Body body, RobotSettings setting) : base("BodyMove", bus)
         {
             _body = body;
@@ -24,8 +24,8 @@ namespace NQRW.FiniteStateMachine.States
         public override void Start()
         {
             base.Start();
-            _sub = Bus.Messages.OfType<ButtonEvent>().Subscribe(OnNext);
-            _sub = Bus.Messages.OfType<AxisEvent>().Subscribe(OnNext);
+            Sub(Bus.Messages.OfType<ButtonEvent>().Subscribe(OnNext));
+            Sub(Bus.Messages.OfType<AxisEvent>().Subscribe(OnNext));
         }
 
         private void OnNext(AxisEvent e)
@@ -57,14 +57,7 @@ namespace NQRW.FiniteStateMachine.States
             {
                 if (e.Value == 32767) _body.Yaw += Angle.FromDegrees(1);
                 if (e.Value == -32767) _body.Yaw += Angle.FromDegrees(-1);
-
             }
-        }
-
-        public override void Stop()
-        {
-            _sub?.Dispose();
-            base.Stop();
         }
 
         private void OnNext(ButtonEvent e)
@@ -77,7 +70,6 @@ namespace NQRW.FiniteStateMachine.States
             {
                 _body.Reset(_setting.Body.StartHeight);
             }
-            
         }
     }
 }

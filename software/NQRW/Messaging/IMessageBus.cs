@@ -11,7 +11,6 @@ namespace NQRW.Messaging
         void Handle(object o);
         void System(string message);
         void System<T>() where T : IMessage;
+        void Log<T>() where T : IMessage;
     }
-
-
 }

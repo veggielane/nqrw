@@ -22,6 +22,7 @@ namespace NQRW.FiniteStateMachine.States
             _servoController.Start();
             Sub(Bus.Messages.OfType<ButtonEvent>().Subscribe(OnNext));
             Sub(Bus.Messages.OfType<HeadingEvent>().Subscribe(OnNext));
+            Sub(Bus.Messages.OfType<RotateEvent>().Subscribe(OnNext));
         }
 
         private void OnNext(HeadingEvent e)
@@ -29,6 +30,14 @@ namespace NQRW.FiniteStateMachine.States
             if (e.Heading.Length > 0.1)
             {
                 Bus.Add(new MoveCommand());
+            }
+        }
+
+        private void OnNext(RotateEvent e)
+        {
+            if (Math.Abs(e.Magnitude) > 0.1)
+            {
+                Bus.Add(new RotateCommand());
             }
         }
 

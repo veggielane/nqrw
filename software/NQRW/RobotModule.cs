@@ -11,6 +11,7 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using NQRW.Kinematics;
+using NQRW.Messaging.Logging;
 using NQRW.Settings;
 using Module = Autofac.Module;
 
@@ -44,6 +45,7 @@ namespace NQRW
                 Console.WriteLine($"Detecting OS: Windows");
                 builder.RegisterType<FakeServoController>().As<IServoController>().SingleInstance();
                 builder.RegisterType<WindowsInputMapping>().As<IPlatformInput>().SingleInstance();
+                builder.RegisterType<ConsoleLogger>().As<ILogger>().SingleInstance();
             }
             else
             {
@@ -51,6 +53,7 @@ namespace NQRW
                 builder.RegisterType<LinuxSSC32>().As<IServoController>().SingleInstance();
                 builder.RegisterType<PS4Controller>().AsSelf().SingleInstance();
                 builder.RegisterType<LinuxInputMapping>().As<IPlatformInput>().SingleInstance();
+                builder.RegisterType<UDPLogger>().As<ILogger>().SingleInstance();
             }
         }
 

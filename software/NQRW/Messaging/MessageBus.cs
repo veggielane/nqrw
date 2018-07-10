@@ -2,16 +2,21 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using JetBrains.Annotations;
+using NQRW.Messaging.Logging;
 
 namespace NQRW.Messaging
 {
+    [UsedImplicitly]
     public class MessageBus : IMessageBus
     {
+        private readonly ILogger _logger;
         private readonly Subject<IMessage> _subject;
         public IObservable<IMessage> Messages { get; private set; }
 
-        public MessageBus()
+        public MessageBus(ILogger logger)
         {
+            _logger = logger;
             _subject = new Subject<IMessage>();
             Messages = _subject.AsObservable();
         }
@@ -54,6 +59,13 @@ namespace NQRW.Messaging
         {
             Messages.OfType<T>().Subscribe(m => {
                 Add(new SystemMessage(m.ToString()));
+            });
+        }
+
+        public void Log<T>() where T : IMessage
+        {
+            Messages.OfType<T>().Subscribe(m => {
+                _logger.Log(m.ToString());
             });
         }
     }

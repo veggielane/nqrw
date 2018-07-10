@@ -1,5 +1,6 @@
 ﻿using NQRW.Devices;
 using NQRW.Devices.Input;
+using NQRW.Maths;
 
 namespace NQRW.Messaging.Messages
 {
@@ -11,6 +12,7 @@ namespace NQRW.Messaging.Messages
             Controller = controller;
             Axis = axis;
             Value = value;
+
         }
 
         public override string ToString() => $"{base.ToString()}: {Axis} - {Value}";
@@ -18,5 +20,6 @@ namespace NQRW.Messaging.Messages
         public PS4Controller Controller { get; }
         public PS4Axis Axis { get; }
         public short Value { get; }
+        public double UnitValue => MathsHelper.Map(Value, -32767, 32767, -1.0, 1.0);
     }
 }

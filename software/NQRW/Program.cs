@@ -3,6 +3,7 @@ using NQRW.Messaging.Messages;
 using NQRW.Robotics;
 using System;
 using System.Reactive.Linq;
+using System.Threading;
 using NQRW.FiniteStateMachine.Commands;
 
 namespace NQRW
@@ -11,49 +12,14 @@ namespace NQRW
     {
         static void Main()
         {
+            var mre = new ManualResetEvent(false);
+            Thread.Sleep(5000);
             using (var robot = RobotModule.Build<IRobot>())
             {
-                robot.Bus.Messages.OfType<SystemMessage>().Subscribe(m => {
-                    Console.WriteLine(m.ToString());
-                });
-                robot.Bus.Messages.OfType<DebugMessage>().Subscribe(m => {
-                    Console.WriteLine(m.ToString());
-                });
-                //robot.Bus.Debug<HeadingEvent>();
-                //robot.Bus.Debug<ButtonEvent>();
-
+                robot.Bus.Log<SystemMessage>();
                 robot.Boot();
-                ConsoleKey key;
-                while ((key = Console.ReadKey().Key)!= ConsoleKey.Escape){
-                    switch (key)
-                    {
-
-                        case ConsoleKey.Tab:
-                            robot.StateMachine.Next<StartCommand>();
-                            break;
-                        case ConsoleKey.UpArrow:
-                            robot.Bus.Add(new BodyMoveMessage(Matrix4.Translate(0, 10, 0)));
-                            break;
-                        case ConsoleKey.DownArrow:
-                            robot.Bus.Add(new BodyMoveMessage(Matrix4.Translate(0, -10, 0)));
-                            break;
-                        case ConsoleKey.LeftArrow:
-                            robot.Bus.Add(new BodyMoveMessage(Matrix4.Translate(10, 0, 0)));
-                            break;
-                        case ConsoleKey.RightArrow:
-                            robot.Bus.Add(new BodyMoveMessage(Matrix4.Translate(-10, 0, 0)));
-                            break;
-                        case ConsoleKey.R:
-                            robot.Bus.Add(new BodyMoveMessage(Matrix4.Translate(0, 0, 0)));
-                            break;
-
-                        case ConsoleKey.Spacebar:
-                            robot.Bus.Add(new StartCommand());
-                            break;
-                    }
-                }
+                mre.WaitOne();
             }
-            
         }
     }
 }

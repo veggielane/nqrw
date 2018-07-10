@@ -40,12 +40,17 @@ namespace NQRW.Robotics
             StateMachine.AddTransition<StandingState, StartCommand, IdleState>();
 
             StateMachine.AddTransition<StandingState, BodyMoveCommand, BodyMoveState>();
+
             StateMachine.AddTransition<BodyMoveState, BodyMoveCommand, StandingState>();
 
 
 
             StateMachine.AddTransition<StandingState, MoveCommand, MovingState>();
             StateMachine.AddTransition<MovingState, StopCommand, StandingState>();
+
+            StateMachine.AddTransition<StandingState, RotateCommand, RotatingState>();
+            StateMachine.AddTransition<RotatingState, StopCommand, StandingState>();
+
 
             /*
              *          ^
@@ -133,7 +138,7 @@ namespace NQRW.Robotics
 
             Timer.Ticks.Subscribe(t =>
             {
-                GaitEngine.Update();
+                GaitEngine.Update(Legs);
                 foreach (var kvp in GaitEngine.Offsets)
                 {
                     Legs[kvp.Key].FootOffset = kvp.Value;
@@ -162,12 +167,15 @@ namespace NQRW.Robotics
 
         public void Handle(AxisEvent e)
         {
-
             if (e.Axis == PS4Axis.RightStickX || e.Axis == PS4Axis.RightStickY)
             {
-                var x = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickX], -32767, 32767, -30.0, 30.0);
-                var y = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickY], -32767, 32767, -30.0, 30.0);
+                var x = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickX], -32767, 32767, -1.0, 1.0);
+                var y = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickY], -32767, 32767, -1.0, 1.0);
                 Bus.Add(new HeadingEvent(new Vector2(x, y)));
+            }
+            if (e.Axis == PS4Axis.LeftStickX)
+            {
+                Bus.Add(new RotateEvent(MathsHelper.Map(e.Value, -32767, 32767, -1.0, 1.0)));
             }
         }
     }

@@ -272,8 +272,8 @@ namespace NQRW.Maths
             return new Matrix4(new[,]
                 {
                     {1.0, 0.0, 0.0, 0.0},
-                    {0.0, Trig.Cos(theta), Trig.Sin(theta), 0.0},
-                    {0.0, -Trig.Sin(theta), Trig.Cos(theta), 0.0},
+                    {0.0, Trig.Cos(theta), -Trig.Sin(theta), 0.0},
+                    {0.0, Trig.Sin(theta), Trig.Cos(theta), 0.0},
                     {0.0, 0.0, 0.0, 1.0}
                 });
         }
@@ -282,9 +282,9 @@ namespace NQRW.Maths
         {
             return new Matrix4(new[,]
                 {
-                    {Trig.Cos(theta), 0.0, -Trig.Sin(theta), 0.0},
+                    {Trig.Cos(theta), 0.0, Trig.Sin(theta), 0.0},
                     {0.0, 1.0, 0.0, 0.0},
-                    {Trig.Sin(theta), 0.0, Trig.Cos(theta), 0.0},
+                    {-Trig.Sin(theta), 0.0, Trig.Cos(theta), 0.0},
                     {0.0, 0.0, 0.0, 1.0}
                 });
         }
@@ -293,8 +293,8 @@ namespace NQRW.Maths
         {
             return new Matrix4(new[,]
                 {
-                    {Trig.Cos(theta), Trig.Sin(theta), 0.0, 0.0},
-                    {-Trig.Sin(theta), Trig.Cos(theta), 0.0, 0.0},
+                    {Trig.Cos(theta), -Trig.Sin(theta), 0.0, 0.0},
+                    {Trig.Sin(theta), Trig.Cos(theta), 0.0, 0.0},
                     {0.0, 0.0, 1.0, 0.0},
                     {0.0, 0.0, 0.0, 1.0}
                 });
