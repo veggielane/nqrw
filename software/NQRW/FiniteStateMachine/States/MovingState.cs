@@ -36,6 +36,7 @@ namespace NQRW.FiniteStateMachine.States
             }
             else
             {
+                _gaitEngine.Mode = e.Mode;
                 _gaitEngine.Heading = e.Heading;
             }
         }

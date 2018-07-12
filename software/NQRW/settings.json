@@ -6,8 +6,8 @@
     "D": 55.0,
     "E": 50.0,
     "F": 90.0,
-    "StartHeight": 90.0,
-    "FootOffsetX": 100,
+    "StartHeight": 80.0,
+    "FootOffsetX": 80,
     "FootOffsetY": 60
   },
   "Legs": {
@@ -69,7 +69,7 @@
       "CoxaOffset": -40.0,
       "FemurOffset": -12.0,
       "TibiaOffset": -70.0,
-      "TarsusOffset": -40.0,
+      "TarsusOffset": -30.0,
 
       "CoxaInvert": false,
       "FemurInvert": false,
@@ -85,7 +85,7 @@
       "CoxaOffset": -5.0,
       "FemurOffset": -12.0,
       "TibiaOffset": -70.0,
-      "TarsusOffset": -40.0,
+      "TarsusOffset": -30.0,
 
       "CoxaInvert": false,
       "FemurInvert": false,

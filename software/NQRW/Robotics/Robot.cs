@@ -20,6 +20,11 @@ namespace NQRW.Robotics
         IHandle<ButtonEvent>, 
         IHandle<AxisEvent>
     {
+        private readonly RobotSettings _settings;
+        private readonly Angle _eggSafeAngle = Angle.FromDegrees(-30);
+        private readonly Angle _eggEmptyAngle = Angle.FromDegrees(80);
+        private readonly Servo _eggServo;
+
         public Robot(
             IMessageBus bus, 
             ITimer timer, 
@@ -31,6 +36,7 @@ namespace NQRW.Robotics
             Body body
             ): base("NQRW", bus, timer, input, body)
         {
+            _settings = settings;
             StateMachine = stateMachine;
             ServoController = servoController;
             GaitEngine = gaitEngine;
@@ -118,8 +124,9 @@ namespace NQRW.Robotics
             ServoController.Servos.Add(30, leftFront.FemurServo);
             ServoController.Servos.Add(31, leftFront.CoxaServo);
 
+            _eggServo = new Servo(_eggSafeAngle, Angle.Zero);
 
-            
+            ServoController.Servos.Add(11, _eggServo);
         }
 
         public override void Boot()
@@ -163,19 +170,50 @@ namespace NQRW.Robotics
             {
                 Bus.Add(new StartCommand());
             }
+
+            //_eggServo
+            if (message.Is(PS4Button.Circle, ButtonState.Pressed))
+            {
+                _eggServo.Angle = _eggEmptyAngle;
+            }
+            if (message.Is(PS4Button.Circle, ButtonState.Released))
+            {
+                _eggServo.Angle = _eggSafeAngle;
+            }
+
+            if (message.Is(PS4Button.R1, ButtonState.Pressed))
+            {
+                _mode = WalkMode.Shuffle;
+            }
+            if (message.Is(PS4Button.R1, ButtonState.Released))
+            {
+                _mode = WalkMode.Moving;
+            }
         }
 
+        private WalkMode _mode = WalkMode.Moving;
         public void Handle(AxisEvent e)
         {
             if (e.Axis == PS4Axis.RightStickX || e.Axis == PS4Axis.RightStickY)
             {
                 var x = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickX], -32767, 32767, -1.0, 1.0);
                 var y = MathsHelper.Map(e.Controller.Axes[PS4Axis.RightStickY], -32767, 32767, -1.0, 1.0);
-                Bus.Add(new HeadingEvent(new Vector2(x, y)));
+
+                Bus.Add(new HeadingEvent(new Vector2(x, y), _mode));
             }
             if (e.Axis == PS4Axis.LeftStickX)
             {
                 Bus.Add(new RotateEvent(MathsHelper.Map(e.Value, -32767, 32767, -1.0, 1.0)));
+            }
+
+            if (e.Axis == PS4Axis.R2)
+            {
+                GaitEngine.StrideHeight = MathsHelper.Map(e.Value, -32767, 32767, 70.00, 100);
+            }
+
+            if (e.Axis == PS4Axis.L2)
+            {
+                Body.Z = MathsHelper.Map(e.Value, -32767, 32767, _settings.Body.StartHeight, _settings.Body.StartHeight + 50);
             }
         }
     }

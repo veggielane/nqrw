@@ -1,29 +1,26 @@
-﻿using System;
-using NQRW.Maths;
+﻿using NQRW.Maths;
 using NQRW.Robotics;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using NQRW.Kinematics;
 
 namespace NQRW.Gait
 {
-    public enum WalkMode { Stop, Moving, Rotating }
+    public enum WalkMode { Stop, Moving, Rotating, Shuffle }
     public class GaitEngine : IGaitEngine
     {
+        private readonly IBody _body;
         public double StrideLength { get; }
         public Angle StrideAngle { get; }
-        public double StrideHeight { get; }
+        public double StrideHeight { get; set; }
+
         public int CurrentStep { get; private set; }
         public int StepCount { get; private set; }
         public int MicroSteps { get; private set; }
 
         public double Lerp { get; private set; }
-
-
         public Vector2 Heading { get; set; } = Vector2.Zero;
         public Angle Rotation { get; set; } = 0.0;
-
 
         public IDictionary<Leg, Vector3> Offsets { get; private set; } = new Dictionary<Leg, Vector3>
         {
@@ -37,8 +34,7 @@ namespace NQRW.Gait
 
         
         public Dictionary<Leg, int[]> Steps { get; }
-
-        
+        public Dictionary<Leg, int[]> Shuffle { get; }
 
         public WalkMode Mode { get; set; }
 
@@ -73,24 +69,15 @@ namespace NQRW.Gait
             }
         }
 
-        public IList<Vector3> Rotatdions() => new List<Vector3>
+        public GaitEngine(Body body)
         {
-            Vector3.Zero,
-            new Vector3(-Heading / 2.0, 0),
-            new Vector3(-Heading / 2.0, StrideHeight/2.0),
-            new Vector3(0,0, StrideHeight),
-            new Vector3(Heading / 2.0, 0),
-            new Vector3(Heading / 2.0, StrideHeight / 2.0)
-        };
-
-        public GaitEngine()
-        {
+            _body = body;
             StrideHeight = 70.0;
             StrideLength = 35.0;
-            StrideAngle = Angle.FromDegrees(10.0);
+            StrideAngle = Angle.FromDegrees(20.0);
 
             StepCount = 8;
-            MicroSteps = 10;
+            MicroSteps = 15;
 
 
             var groupA = new[] {3, 5, 4, 4, 0, 1, 1, 2};
@@ -107,15 +94,16 @@ namespace NQRW.Gait
                 {Leg.RightRear, groupB},
             };
 
-            //Steps = new Dictionary<Leg, int[]>
-            //{
-            //    {Leg.LeftFront, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
-            //    {Leg.LeftMiddle, new[]{ 3, 4, 5, 5, 0, 1, 1, 2 }},
-            //    {Leg.LeftRear, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
-            //    {Leg.RightFront, new[]{3, 4, 5, 5, 0, 1, 1, 2 }},
-            //    {Leg.RightMiddle, new[]{0, 1, 1, 2, 3, 4, 5, 5 }},
-            //    {Leg.RightRear, new[]{3, 4, 5, 5, 0, 1, 1, 2 }},
-            //};
+            Shuffle = new Dictionary<Leg, int[]>
+            {
+                {Leg.LeftFront, groupA},
+                {Leg.LeftMiddle, groupA},
+                {Leg.LeftRear, groupA},
+                {Leg.RightFront, groupA},
+                {Leg.RightMiddle, groupA},
+                {Leg.RightRear, groupA},
+            };
+
             Stop();
         }
 
@@ -128,7 +116,9 @@ namespace NQRW.Gait
 
         private Vector2 CalculateRotationOffset(ILeg leg , Angle a)
         {
-            var end = leg.FootPosition.ToVector2();
+            var basePos = _body.Position * leg.BasePosition;
+            var baseToFoot = leg.FootPosition + leg.FootOffset - basePos.ToVector3();
+            var end = baseToFoot.ToVector2();
             return end.Rotate(a) - end;
         }
 
@@ -162,6 +152,20 @@ namespace NQRW.Gait
                     IncrementStep();
                 }
                 Offsets = positions;
+            }
+            else if (Mode == WalkMode.Shuffle)
+            {
+                var nextStep = CurrentStep + 1;
+                if (nextStep >= StepCount) nextStep = 0;
+                var positions = Shuffle.ToDictionary(kvp => kvp.Key, kvp => Positions[kvp.Value[CurrentStep]].Lerp(Positions[kvp.Value[nextStep]], Lerp));
+                Lerp = Lerp + 1.0 / MicroSteps;
+                if (Lerp > 1.0)
+                {
+                    Lerp = 1.0 / MicroSteps;
+                    IncrementStep();
+                }
+                Offsets = positions;
+
             }
             else
             {

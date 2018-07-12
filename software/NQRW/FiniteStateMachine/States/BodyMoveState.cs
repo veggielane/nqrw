@@ -49,7 +49,10 @@ namespace NQRW.FiniteStateMachine.States
 
             if (e.Axis == PS4Axis.DPadY)
             {
-                if (e.Value == 32767) _body.Z = _body.Z - 5 ;
+                if (e.Value == 32767)
+                {
+                    _body.Z = Math.Max(_body.Z - 5, 0.0);
+                }
                 if (e.Value == -32767) _body.Z = _body.Z + 5;
             }
 

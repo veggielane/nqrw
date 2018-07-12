@@ -9,7 +9,7 @@ namespace NQRW.Gait
     {
         double StrideLength { get; }
         Angle StrideAngle { get; }
-        double StrideHeight { get; }
+        double StrideHeight { get; set; }
         Vector2 Heading { get; set; }
         Angle Rotation { get; set; }
         IDictionary<Leg, Vector3> Offsets { get; }
